@@ -1,0 +1,115 @@
+<div class="container checkout" data-checkout>
+  <div class="checkout__empty" data-empty hidden>
+    <h1>Your cart is empty</h1>
+    <p>Add an organizer and come back here to check out.</p>
+    <a class="btn btn--primary" href="index.html#shop">Shop organizers</a>
+  </div>
+
+  <div class="checkout__grid" data-main hidden>
+    <form class="co-form" data-form novalidate>
+      <h1>Checkout</h1>
+
+      <section class="co-block" aria-labelledby="co-contact">
+        <h2 id="co-contact">Contact</h2>
+        <div class="field">
+          <label for="f-email">Email</label>
+          <input id="f-email" name="email" type="email" inputmode="email" autocomplete="email" autocapitalize="none" autocorrect="off" spellcheck="false" required aria-describedby="e-email">
+          <p class="field__hint" id="h-email">We send your tracking link here.</p>
+          <p class="field__error" id="e-email" role="alert" hidden></p>
+        </div>
+      </section>
+
+      <section class="co-block" aria-labelledby="co-address">
+        <h2 id="co-address">Delivery address</h2>
+        <div class="field-row">
+          <div class="field">
+            <label for="f-first">First name</label>
+            <input id="f-first" name="firstName" type="text" autocomplete="given-name" required aria-describedby="e-first">
+            <p class="field__error" id="e-first" role="alert" hidden></p>
+          </div>
+          <div class="field">
+            <label for="f-last">Last name</label>
+            <input id="f-last" name="lastName" type="text" autocomplete="family-name" required aria-describedby="e-last">
+            <p class="field__error" id="e-last" role="alert" hidden></p>
+          </div>
+        </div>
+        <div class="field">
+          <label for="f-country">Country</label>
+          <select id="f-country" name="country" autocomplete="country" required aria-describedby="e-country"></select>
+          <p class="field__error" id="e-country" role="alert" hidden></p>
+        </div>
+        <div class="field">
+          <label for="f-address">Address</label>
+          <input id="f-address" name="address1" type="text" autocomplete="address-line1" required aria-describedby="e-address">
+          <p class="field__error" id="e-address" role="alert" hidden></p>
+        </div>
+        <div class="field">
+          <label for="f-address2">Apartment, suite, etc. <span class="opt-tag">optional</span></label>
+          <input id="f-address2" name="address2" type="text" autocomplete="address-line2">
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label for="f-postal">Postal code</label>
+            <input id="f-postal" name="postal" type="text" autocomplete="postal-code" autocapitalize="characters" required aria-describedby="e-postal">
+            <p class="field__error" id="e-postal" role="alert" hidden></p>
+          </div>
+          <div class="field">
+            <label for="f-city">City</label>
+            <input id="f-city" name="city" type="text" autocomplete="address-level2" required aria-describedby="e-city">
+            <p class="field__error" id="e-city" role="alert" hidden></p>
+          </div>
+        </div>
+        <div class="field">
+          <label for="f-phone">Phone <span class="opt-tag">optional</span></label>
+          <input id="f-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel">
+          <p class="field__hint">Only used by the courier if they cannot find you.</p>
+        </div>
+      </section>
+
+      <section class="co-block" aria-labelledby="co-ship">
+        <h2 id="co-ship">Shipping</h2>
+        <div class="ship-opt">
+          <div>
+            <strong>Tracked delivery</strong>
+            <span>{{deliveryDays}}</span>
+          </div>
+          <strong data-ship-price>&nbsp;</strong>
+        </div>
+      </section>
+
+      <section class="co-block" aria-labelledby="co-pay">
+        <h2 id="co-pay">Payment</h2>
+        <div data-pay></div>
+        <p class="field__error" data-pay-error role="alert" hidden></p>
+      </section>
+    </form>
+
+    <aside class="co-summary" aria-labelledby="co-sum">
+      <h2 id="co-sum">Order summary</h2>
+      <ul class="sum-lines" data-sum-lines></ul>
+      <dl class="sum-totals" data-sum-totals></dl>
+      <a class="co-summary__edit" href="index.html#shop">Back to the shop</a>
+    </aside>
+  </div>
+
+  <div class="confirm" data-confirm hidden tabindex="-1">
+    <h1>Thank you, <span data-confirm-name></span>.</h1>
+    <p class="lead">Order <strong data-confirm-id></strong> is confirmed. We will send the tracking link to <strong data-confirm-email></strong> as soon as it ships. Keep the order number in case you write to us.</p>
+    <div class="confirm__grid">
+      <div>
+        <h2>What happens next</h2>
+        <ol class="steps">
+          <li><strong>We pack your order.</strong> It ships from our overseas warehouse.</li>
+          <li><strong>You get a tracking link.</strong> We email it as soon as the parcel is on its way.</li>
+          <li><strong>It arrives in {{deliveryDays}}.</strong> Questions? Write to <a href="mailto:{{email}}">{{email}}</a>.</li>
+        </ol>
+      </div>
+      <div>
+        <h2>Your order</h2>
+        <ul class="sum-lines" data-confirm-lines></ul>
+        <dl class="sum-totals" data-confirm-totals></dl>
+      </div>
+    </div>
+    <a class="btn btn--ghost" href="index.html">Back to the shop</a>
+  </div>
+</div>

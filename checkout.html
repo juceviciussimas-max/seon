@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#fffbf7">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#fffbf7">
+<title>Checkout | Seon</title>
+<meta name="description" content="Secure checkout.">
+<meta name="robots" content="noindex">
+<meta property="og:title" content="Checkout | Seon">
+<meta property="og:description" content="Secure checkout.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://juceviciussimas-max.github.io/seon/assets/img/og.jpg">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preload" href="assets/fonts/bodoni-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/jost-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="assets/css/style.css">
+<script>document.documentElement.classList.add('js')</script>
+</head>
+<body class="page-checkout">
+
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-header" data-header>
+  <div class="container site-header__row">
+    <a class="brand" href="index.html" aria-label="Seon, home">
+      <span class="brand__name">Seon</span><span class="brand__ko" lang="ko">선</span>
+    </a>
+    
+    <button class="cart-btn" type="button" data-cart-open aria-label="Open cart, 0 items" aria-haspopup="dialog">
+      <svg class="icon " aria-hidden="true" focusable="false" width="1em" height="1em" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="currentColor"><path d="M216,40H40A16,16,0,0,0,24,56V200a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V56A16,16,0,0,0,216,40Zm0,16V72H40V56Zm0,144H40V88H216V200Zm-40-88a48,48,0,0,1-96,0,8,8,0,0,1,16,0,32,32,0,0,0,64,0,8,8,0,0,1,16,0Z"/></svg><span class="cart-btn__label">Cart</span><span class="cart-btn__count" data-cart-count hidden>0</span>
+    </button>
+  </div>
+</header>
+<main id="main">
+<div class="container checkout" data-checkout>
+  <div class="checkout__empty" data-empty hidden>
+    <h1>Your cart is empty</h1>
+    <p>Add an organizer and come back here to check out.</p>
+    <a class="btn btn--primary" href="index.html#shop">Shop organizers</a>
+  </div>
+
+  <div class="checkout__grid" data-main hidden>
+    <form class="co-form" data-form novalidate>
+      <h1>Checkout</h1>
+
+      <section class="co-block" aria-labelledby="co-contact">
+        <h2 id="co-contact">Contact</h2>
+        <div class="field">
+          <label for="f-email">Email</label>
+          <input id="f-email" name="email" type="email" inputmode="email" autocomplete="email" autocapitalize="none" autocorrect="off" spellcheck="false" required aria-describedby="e-email">
+          <p class="field__hint" id="h-email">We send your tracking link here.</p>
+          <p class="field__error" id="e-email" role="alert" hidden></p>
+        </div>
+      </section>
+
+      <section class="co-block" aria-labelledby="co-address">
+        <h2 id="co-address">Delivery address</h2>
+        <div class="field-row">
+          <div class="field">
+            <label for="f-first">First name</label>
+            <input id="f-first" name="firstName" type="text" autocomplete="given-name" required aria-describedby="e-first">
+            <p class="field__error" id="e-first" role="alert" hidden></p>
+          </div>
+          <div class="field">
+            <label for="f-last">Last name</label>
+            <input id="f-last" name="lastName" type="text" autocomplete="family-name" required aria-describedby="e-last">
+            <p class="field__error" id="e-last" role="alert" hidden></p>
+          </div>
+        </div>
+        <div class="field">
+          <label for="f-country">Country</label>
+          <select id="f-country" name="country" autocomplete="country" required aria-describedby="e-country"></select>
+          <p class="field__error" id="e-country" role="alert" hidden></p>
+        </div>
+        <div class="field">
+          <label for="f-address">Address</label>
+          <input id="f-address" name="address1" type="text" autocomplete="address-line1" required aria-describedby="e-address">
+          <p class="field__error" id="e-address" role="alert" hidden></p>
+        </div>
+        <div class="field">
+          <label for="f-address2">Apartment, suite, etc. <span class="opt-tag">optional</span></label>
+          <input id="f-address2" name="address2" type="text" autocomplete="address-line2">
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label for="f-postal">Postal code</label>
+            <input id="f-postal" name="postal" type="text" autocomplete="postal-code" autocapitalize="characters" required aria-describedby="e-postal">
+            <p class="field__error" id="e-postal" role="alert" hidden></p>
+          </div>
+          <div class="field">
+            <label for="f-city">City</label>
+            <input id="f-city" name="city" type="text" autocomplete="address-level2" required aria-describedby="e-city">
+            <p class="field__error" id="e-city" role="alert" hidden></p>
+          </div>
+        </div>
+        <div class="field">
+          <label for="f-phone">Phone <span class="opt-tag">optional</span></label>
+          <input id="f-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel">
+          <p class="field__hint">Only used by the courier if they cannot find you.</p>
+        </div>
+      </section>
+
+      <section class="co-block" aria-labelledby="co-ship">
+        <h2 id="co-ship">Shipping</h2>
+        <div class="ship-opt">
+          <div>
+            <strong>Tracked delivery</strong>
+            <span>7 to 12 business days</span>
+          </div>
+          <strong data-ship-price>&nbsp;</strong>
+        </div>
+      </section>
+
+      <section class="co-block" aria-labelledby="co-pay">
+        <h2 id="co-pay">Payment</h2>
+        <div data-pay></div>
+        <p class="field__error" data-pay-error role="alert" hidden></p>
+      </section>
+    </form>
+
+    <aside class="co-summary" aria-labelledby="co-sum">
+      <h2 id="co-sum">Order summary</h2>
+      <ul class="sum-lines" data-sum-lines></ul>
+      <dl class="sum-totals" data-sum-totals></dl>
+      <a class="co-summary__edit" href="index.html#shop">Back to the shop</a>
+    </aside>
+  </div>
+
+  <div class="confirm" data-confirm hidden tabindex="-1">
+    <h1>Thank you, <span data-confirm-name></span>.</h1>
+    <p class="lead">Order <strong data-confirm-id></strong> is confirmed. We will send the tracking link to <strong data-confirm-email></strong> as soon as it ships. Keep the order number in case you write to us.</p>
+    <div class="confirm__grid">
+      <div>
+        <h2>What happens next</h2>
+        <ol class="steps">
+          <li><strong>We pack your order.</strong> It ships from our overseas warehouse.</li>
+          <li><strong>You get a tracking link.</strong> We email it as soon as the parcel is on its way.</li>
+          <li><strong>It arrives in 7 to 12 business days.</strong> Questions? Write to <a href="mailto:hello@seon-line.example">hello@seon-line.example</a>.</li>
+        </ol>
+      </div>
+      <div>
+        <h2>Your order</h2>
+        <ul class="sum-lines" data-confirm-lines></ul>
+        <dl class="sum-totals" data-confirm-totals></dl>
+      </div>
+    </div>
+    <a class="btn btn--ghost" href="index.html">Back to the shop</a>
+  </div>
+</div>
+
+</main>
+
+<footer class="site-footer">
+  <div class="container site-footer__grid">
+    <div class="site-footer__brand">
+      <a class="brand" href="index.html"><span class="brand__name">Seon</span><span class="brand__ko" lang="ko">선</span></a>
+      <p>Korean-inspired line care for your face and posture. Shipped free across the US.</p>
+    </div>
+    <nav aria-label="Shop">
+      <h2>Shop</h2>
+      <ul>
+        <li><a href="index.html#shop">All products</a></li>
+        <li><a href="index.html#ritual">How to wear</a></li>
+        <li><a href="index.html#faq">FAQ</a></li>
+      </ul>
+    </nav>
+    <nav aria-label="Help">
+      <h2>Help</h2>
+      <ul>
+        <li><a href="shipping.html">Shipping</a></li>
+        <li><a href="returns.html">Returns</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </nav>
+    <nav aria-label="Legal">
+      <h2>Legal</h2>
+      <ul>
+        <li><a href="privacy.html">Privacy</a></li>
+        <li><a href="terms.html">Terms of sale</a></li>
+      </ul>
+    </nav>
+  </div>
+  <div class="container site-footer__legal">
+    <p>&copy; 2026 Your Company Ltd. Street 1, City, Country. </p>
+  </div>
+</footer>
+
+<div class="drawer" data-drawer hidden>
+  <div class="drawer__scrim" data-cart-close></div>
+  <aside class="drawer__panel" role="dialog" aria-modal="true" aria-labelledby="drawer-title" tabindex="-1">
+    <div class="drawer__head">
+      <h2 id="drawer-title">Your cart</h2>
+      <button class="icon-btn" type="button" data-cart-close aria-label="Close cart"><svg class="icon " aria-hidden="true" focusable="false" width="1em" height="1em" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="currentColor"><path d="M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z"/></svg></button>
+    </div>
+    <div class="drawer__body" data-drawer-body></div>
+    <div class="drawer__foot" data-drawer-foot></div>
+  </aside>
+</div>
+<div class="sr-only" aria-live="polite" data-live></div>
+<script src="assets/js/config.js"></script>
+<script src="assets/js/app.js"></script>
+
+<script src="assets/js/checkout.js"></script>
+</body>
+</html>

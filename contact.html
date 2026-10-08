@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#fffbf7">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#fffbf7">
+<title>Contact | Seon</title>
+<meta name="description" content="Questions about an order or a product? Write to us.">
+
+<meta property="og:title" content="Contact | Seon">
+<meta property="og:description" content="Questions about an order or a product? Write to us.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://juceviciussimas-max.github.io/seon/assets/img/og.jpg">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preload" href="assets/fonts/bodoni-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/jost-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="assets/css/style.css">
+<script>document.documentElement.classList.add('js')</script>
+</head>
+<body class="page-info">
+
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-header" data-header>
+  <div class="container site-header__row">
+    <a class="brand" href="index.html" aria-label="Seon, home">
+      <span class="brand__name">Seon</span><span class="brand__ko" lang="ko">선</span>
+    </a>
+    <nav class="nav" aria-label="Main">
+      <a href="index.html#shop">Shop</a>
+      <a href="index.html#ritual">How to wear</a>
+      <a href="index.html#faq">FAQ</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+    <button class="cart-btn" type="button" data-cart-open aria-label="Open cart, 0 items" aria-haspopup="dialog">
+      <svg class="icon " aria-hidden="true" focusable="false" width="1em" height="1em" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="currentColor"><path d="M216,40H40A16,16,0,0,0,24,56V200a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V56A16,16,0,0,0,216,40Zm0,16V72H40V56Zm0,144H40V88H216V200Zm-40-88a48,48,0,0,1-96,0,8,8,0,0,1,16,0,32,32,0,0,0,64,0,8,8,0,0,1,16,0Z"/></svg><span class="cart-btn__label">Cart</span><span class="cart-btn__count" data-cart-count hidden>0</span>
+    </button>
+  </div>
+</header>
+<main id="main">
+<article class="container prose">
+  <h1>Contact</h1>
+  <p class="lead">Questions about an order or a product? Write to us and we reply within one working day.</p>
+
+  <h2>Email</h2>
+  <p><a href="mailto:hello@seon-line.example">hello@seon-line.example</a></p>
+
+  <h2>Include your order number</h2>
+  <p>For anything about an order, add the order number from your confirmation email. It looks like PRC-123456. It helps us find your parcel quickly.</p>
+
+  <h2>Before you write</h2>
+  <p>Answers to the most common questions are on the <a href="index.html#faq">FAQ</a> and the <a href="shipping.html">shipping page</a>.</p>
+</article>
+
+</main>
+
+<footer class="site-footer">
+  <div class="container site-footer__grid">
+    <div class="site-footer__brand">
+      <a class="brand" href="index.html"><span class="brand__name">Seon</span><span class="brand__ko" lang="ko">선</span></a>
+      <p>Korean-inspired line care for your face and posture. Shipped free across the US.</p>
+    </div>
+    <nav aria-label="Shop">
+      <h2>Shop</h2>
+      <ul>
+        <li><a href="index.html#shop">All products</a></li>
+        <li><a href="index.html#ritual">How to wear</a></li>
+        <li><a href="index.html#faq">FAQ</a></li>
+      </ul>
+    </nav>
+    <nav aria-label="Help">
+      <h2>Help</h2>
+      <ul>
+        <li><a href="shipping.html">Shipping</a></li>
+        <li><a href="returns.html">Returns</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </nav>
+    <nav aria-label="Legal">
+      <h2>Legal</h2>
+      <ul>
+        <li><a href="privacy.html">Privacy</a></li>
+        <li><a href="terms.html">Terms of sale</a></li>
+      </ul>
+    </nav>
+  </div>
+  <div class="container site-footer__legal">
+    <p>&copy; 2026 Your Company Ltd. Street 1, City, Country. </p>
+  </div>
+</footer>
+
+<div class="drawer" data-drawer hidden>
+  <div class="drawer__scrim" data-cart-close></div>
+  <aside class="drawer__panel" role="dialog" aria-modal="true" aria-labelledby="drawer-title" tabindex="-1">
+    <div class="drawer__head">
+      <h2 id="drawer-title">Your cart</h2>
+      <button class="icon-btn" type="button" data-cart-close aria-label="Close cart"><svg class="icon " aria-hidden="true" focusable="false" width="1em" height="1em" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="currentColor"><path d="M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z"/></svg></button>
+    </div>
+    <div class="drawer__body" data-drawer-body></div>
+    <div class="drawer__foot" data-drawer-foot></div>
+  </aside>
+</div>
+<div class="sr-only" aria-live="polite" data-live></div>
+<script src="assets/js/config.js"></script>
+<script src="assets/js/app.js"></script>
+
+
+</body>
+</html>
