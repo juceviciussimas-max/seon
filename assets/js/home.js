@@ -15,7 +15,7 @@
 
   /* ---------- product cards ---------- */
   var grid = $('[data-products]');
-  var order = ['set', 'strap', 'belt'];
+  var order = ['set', 'strap', 'belt', 'box'];
   grid.innerHTML = order.map(function (id) {
     var p = products.find(function (x) { return x.id === id; });
     var sized = p.variants.length > 1;
@@ -29,7 +29,7 @@
     return '<article class="pcard pcard--' + p.id + '" data-product="' + p.id + '">' +
       '<div class="pcard__media"><img class="pcard__img" data-main src="' + p.images[0] + '" alt="' + esc(p.alts[0]) + '" loading="lazy" decoding="async"><div class="pcard__thumbs">' + thumbs + '</div></div>' +
       '<div class="pcard__body">' +
-        (p.id === 'set' ? '<p class="pcard__tag">Best value</p>' : '') +
+        (p.id === 'set' ? '<p class="pcard__tag">Most popular</p>' : p.id === 'box' ? '<p class="pcard__tag">Best value</p>' : '') +
         '<h3 class="pcard__name">' + esc(p.name) + '</h3>' +
         '<p class="pcard__short">' + esc(p.short) + '</p>' +
         '<p class="pcard__price">' + money(cents(p.price)) + (p.compareNote ? '<span class="pcard__save">' + esc(p.compareNote) + '</span>' : '') + '</p>' +

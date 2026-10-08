@@ -189,6 +189,88 @@ window.PERCH = {
             ]
           }
         ]
+      },
+      {
+        "id": "box",
+        "name": "The Ritual Box",
+        "short": "Two V-line straps and one posture belt. One for you, one to share, or a spare for travel.",
+        "price": 49.99,
+        "compareNote": "Save $12.98 against buying separately.",
+        "images": [
+          "assets/img/strap-3.webp",
+          "assets/img/belt-3.webp",
+          "assets/img/strap-2.webp",
+          "assets/img/belt-flat.webp"
+        ],
+        "alts": [
+          "Smiling woman wearing the pink V-line strap",
+          "The white posture belt from the back and side",
+          "Woman wearing the pink V-line strap",
+          "The white posture belt laid flat"
+        ],
+        "sizeLabel": "Belt size",
+        "variants": [
+          {
+            "id": "box-s",
+            "size": "S",
+            "label": "2 straps + belt size S",
+            "cj": [
+              {
+                "vid": "2506230823111618500",
+                "qty": 2
+              },
+              {
+                "vid": "8E2133AE-99AE-4B9B-A7A6-23C1D13CAA53",
+                "qty": 1
+              }
+            ]
+          },
+          {
+            "id": "box-m",
+            "size": "M",
+            "label": "2 straps + belt size M",
+            "cj": [
+              {
+                "vid": "2506230823111618500",
+                "qty": 2
+              },
+              {
+                "vid": "ACA52BDC-3D43-4193-81CE-7D91B34BEB92",
+                "qty": 1
+              }
+            ]
+          },
+          {
+            "id": "box-l",
+            "size": "L",
+            "label": "2 straps + belt size L",
+            "cj": [
+              {
+                "vid": "2506230823111618500",
+                "qty": 2
+              },
+              {
+                "vid": "4517A516-67C6-4714-9E0D-29234334DB62",
+                "qty": 1
+              }
+            ]
+          },
+          {
+            "id": "box-xl",
+            "size": "XL",
+            "label": "2 straps + belt size XL",
+            "cj": [
+              {
+                "vid": "2506230823111618500",
+                "qty": 2
+              },
+              {
+                "vid": "B0DAB8B6-3691-4578-9670-CA04D3EF52C8",
+                "qty": 1
+              }
+            ]
+          }
+        ]
       }
     ],
     "variants": [
@@ -341,6 +423,82 @@ window.PERCH = {
         "name": "The Seon Set",
         "price": 36.99,
         "image": "assets/img/hero-model-700.webp"
+      },
+      {
+        "id": "box-s",
+        "size": "S",
+        "label": "2 straps + belt size S",
+        "cj": [
+          {
+            "vid": "2506230823111618500",
+            "qty": 2
+          },
+          {
+            "vid": "8E2133AE-99AE-4B9B-A7A6-23C1D13CAA53",
+            "qty": 1
+          }
+        ],
+        "productId": "box",
+        "name": "The Ritual Box",
+        "price": 49.99,
+        "image": "assets/img/strap-3.webp"
+      },
+      {
+        "id": "box-m",
+        "size": "M",
+        "label": "2 straps + belt size M",
+        "cj": [
+          {
+            "vid": "2506230823111618500",
+            "qty": 2
+          },
+          {
+            "vid": "ACA52BDC-3D43-4193-81CE-7D91B34BEB92",
+            "qty": 1
+          }
+        ],
+        "productId": "box",
+        "name": "The Ritual Box",
+        "price": 49.99,
+        "image": "assets/img/strap-3.webp"
+      },
+      {
+        "id": "box-l",
+        "size": "L",
+        "label": "2 straps + belt size L",
+        "cj": [
+          {
+            "vid": "2506230823111618500",
+            "qty": 2
+          },
+          {
+            "vid": "4517A516-67C6-4714-9E0D-29234334DB62",
+            "qty": 1
+          }
+        ],
+        "productId": "box",
+        "name": "The Ritual Box",
+        "price": 49.99,
+        "image": "assets/img/strap-3.webp"
+      },
+      {
+        "id": "box-xl",
+        "size": "XL",
+        "label": "2 straps + belt size XL",
+        "cj": [
+          {
+            "vid": "2506230823111618500",
+            "qty": 2
+          },
+          {
+            "vid": "B0DAB8B6-3691-4578-9670-CA04D3EF52C8",
+            "qty": 1
+          }
+        ],
+        "productId": "box",
+        "name": "The Ritual Box",
+        "price": 49.99,
+        "image": "assets/img/strap-3.webp"
       }
     ]
   }
