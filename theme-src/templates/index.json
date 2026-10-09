@@ -1,0 +1,161 @@
+{
+  "sections": {
+    "hero": {
+      "type": "hero",
+      "settings": {}
+    },
+    "ritual": {
+      "type": "ritual",
+      "settings": {
+        "heading": "How to wear it"
+      },
+      "blocks": {
+        "s1": {
+          "type": "step",
+          "settings": {
+            "title": "Cup your chin",
+            "text": "Place the wide mesh part under your chin and jawline.",
+            "fallback": "strap-1.webp"
+          }
+        },
+        "s2": {
+          "type": "step",
+          "settings": {
+            "title": "Ears through",
+            "text": "Slip each ear through the side openings so it sits flat.",
+            "fallback": "strap-2.webp"
+          }
+        },
+        "s3": {
+          "type": "step",
+          "settings": {
+            "title": "Close and rest",
+            "text": "Fasten the velcro on top, snug but comfortable. Wear it for 20 to 30 minutes while you read or do your skincare.",
+            "fallback": "hero-model-700.webp"
+          }
+        }
+      },
+      "block_order": [
+        "s1",
+        "s2",
+        "s3"
+      ]
+    },
+    "showcase": {
+      "type": "showcase",
+      "settings": {
+        "heading": "The collection"
+      }
+    },
+    "posture": {
+      "type": "posture",
+      "settings": {},
+      "blocks": {
+        "t1": {
+          "type": "tip",
+          "settings": {
+            "title": "Arms through the loops",
+            "text": "like putting on a backpack"
+          }
+        },
+        "t2": {
+          "type": "tip",
+          "settings": {
+            "title": "Pad between your shoulder blades",
+            "text": "it sits flat under your clothes"
+          }
+        },
+        "t3": {
+          "type": "tip",
+          "settings": {
+            "title": "Adjust the velcro",
+            "text": "firm, never tight; start with 20 minutes a day"
+          }
+        }
+      },
+      "block_order": [
+        "t1",
+        "t2",
+        "t3"
+      ]
+    },
+    "faq": {
+      "type": "faq",
+      "settings": {
+        "heading": "Before you order"
+      },
+      "blocks": {
+        "q0": {
+          "type": "q",
+          "settings": {
+            "q": "How long does delivery take?",
+            "a": "<p>Delivery to the US takes 7 to 12 business days and shipping is free. You get a tracking link by email as soon as your parcel ships.</p>"
+          }
+        },
+        "q1": {
+          "type": "q",
+          "settings": {
+            "q": "How does the bundle discount work?",
+            "a": "<p>Whenever a posture belt and a V-line strap are in your cart together, each strap (up to two) gets $9.99 off automatically. No code needed.</p>"
+          }
+        },
+        "q2": {
+          "type": "q",
+          "settings": {
+            "q": "Which belt size should I choose?",
+            "a": "<p>The belt adjusts with velcro. Choose your usual top size, and if you are between sizes, choose the larger one.</p>"
+          }
+        },
+        "q3": {
+          "type": "q",
+          "settings": {
+            "q": "How long should I wear them?",
+            "a": "<p>Start with 20 to 30 minutes a day for each. Take them off if anything feels tight or uncomfortable.</p>"
+          }
+        },
+        "q4": {
+          "type": "q",
+          "settings": {
+            "q": "How do I clean them?",
+            "a": "<p>Hand wash in cool water with a little mild soap and let them air dry. Do not tumble dry.</p>"
+          }
+        },
+        "q5": {
+          "type": "q",
+          "settings": {
+            "q": "Are these medical products?",
+            "a": "<p>No. They are comfort and self-care accessories, not a treatment for any condition. If you have back, jaw or skin problems, ask your doctor first.</p>"
+          }
+        },
+        "q6": {
+          "type": "q",
+          "settings": {
+            "q": "What if I change my mind?",
+            "a": "<p>Return unused items within 30 days of delivery. If something arrives damaged, we replace it or refund you.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "q0",
+        "q1",
+        "q2",
+        "q3",
+        "q4",
+        "q5",
+        "q6"
+      ]
+    },
+    "closer": {
+      "type": "closer",
+      "settings": {}
+    }
+  },
+  "order": [
+    "hero",
+    "ritual",
+    "showcase",
+    "posture",
+    "faq",
+    "closer"
+  ]
+}

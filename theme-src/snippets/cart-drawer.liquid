@@ -1,0 +1,13 @@
+<div class="drawer" data-drawer hidden>
+  <div class="drawer__scrim" data-cart-close></div>
+  <aside class="drawer__panel" role="dialog" aria-modal="true" aria-labelledby="drawer-title" tabindex="-1">
+    <div class="drawer__head">
+      <h2 id="drawer-title">Your cart</h2>
+      <button class="icon-btn" type="button" data-cart-close aria-label="Close cart">{% render 'icon', name: 'x' %}</button>
+    </div>
+    <p class="drawer__ship">{% render 'icon', name: 'truck' %}<span>Free tracked US shipping on every order</span></p>
+    <div class="drawer__body" data-drawer-body></div>
+    <div class="drawer__foot" data-drawer-foot></div>
+  </aside>
+</div>
+<div class="sr-only" aria-live="polite" data-live></div>

@@ -1,0 +1,38 @@
+{%- comment -%}
+  Bundle offer. Adds the real strap and belt variants together; the automatic discount
+  in Shopify admin brings the cart to the bundle price, so CJ can ship each item as usual.
+{%- endcomment -%}
+{%- assign strap = all_products[settings.strap_handle] -%}
+{%- assign belt = all_products[settings.belt_handle] -%}
+{%- if strap.id and belt.id -%}
+  {%- assign disc_each = settings.bundle_discount | default: '9.99' | times: 100 | round -%}
+  {%- assign disc_qty = strap_qty -%}{%- if disc_qty > 2 -%}{%- assign disc_qty = 2 -%}{%- endif -%}
+  {%- assign full = strap.price | times: strap_qty | plus: belt.price -%}
+  {%- assign save = disc_each | times: disc_qty -%}
+  {%- assign now = full | minus: save -%}
+  <article class="pcard pcard--wide{% if flip %} pcard--flip{% endif %}" data-card data-offer="{{ kind }}" data-strap-qty="{{ strap_qty }}" data-belt-qty="{{ belt_qty }}">
+    <div class="pcard__media">
+      <img class="pcard__img" src="{{ image | asset_url }}" alt="" loading="lazy" width="1200" height="1200">
+    </div>
+    <div class="pcard__body">
+      <p class="pcard__tag">{{ tag }}</p>
+      <h3 class="pcard__name">{{ title }}</h3>
+      <p class="pcard__short">{{ text }}</p>
+      <ul class="pcard__inside">
+        <li>{{ strap_qty }} × {{ strap.title }}</li>
+        <li>{{ belt_qty }} × {{ belt.title }} in your size</li>
+      </ul>
+      <p class="pcard__price">{{ now | money }} <s>{{ full | money }}</s><span class="pcard__save">You save {{ save | money }}</span></p>
+      <fieldset class="opt">
+        <legend>Belt size <span data-size-name>{{ belt.variants[1].title | default: belt.variants[0].title }}</span></legend>
+        <div class="opt__row">
+          {%- for v in belt.variants -%}
+            <label class="chip chip--sm"><input type="radio" name="offer-{{ kind }}-{{ section.id }}" value="{{ v.id }}" data-title="{{ v.title | escape }}"{% if forloop.index == 2 %} checked{% endif %}{% unless v.available %} disabled{% endunless %}><span class="chip__face">{{ v.title }}</span></label>
+          {%- endfor -%}
+        </div>
+      </fieldset>
+      <button class="btn btn--primary pcard__add" type="button" data-offer-add><span class="btn__label">Add the {{ title | remove: 'The ' }}</span></button>
+      <p class="pcard__ship">Free tracked US shipping. Discount applied automatically in your cart.</p>
+    </div>
+  </article>
+{%- endif -%}

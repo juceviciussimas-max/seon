@@ -1,0 +1,124 @@
+{%- assign strap = all_products[settings.strap_handle] -%}
+{%- assign belt = all_products[settings.belt_handle] -%}
+{%- assign v0 = product.selected_or_first_available_variant -%}
+{%- assign offers = section.blocks | where: 'type', 'offer' -%}
+<section class="pdp" data-pdp data-handle="{{ product.handle }}">
+  <div class="container pdp__grid">
+    <div class="pdp__gallery" data-gallery>
+      <div class="pdp__main">
+        {%- assign first_media = product.featured_media -%}
+        {%- if first_media -%}
+          {{ first_media | image_url: width: 1400 | image_tag: data-gallery-main: '', loading: 'eager', fetchpriority: 'high', sizes: '(max-width: 900px) 92vw, 50vw', widths: '600, 900, 1200, 1400', alt: first_media.alt }}
+        {%- endif -%}
+      </div>
+      {%- if product.media.size > 1 -%}
+        <ul class="pdp__thumbs" aria-label="Product photos">
+          {%- for media in product.media -%}
+            <li><button class="thumb" type="button" data-thumb data-src="{{ media | image_url: width: 1400 }}" data-alt="{{ media.alt | escape }}"{% if forloop.first %} aria-current="true"{% endif %} aria-label="Show photo {{ forloop.index }} of {{ product.media.size }}">{{ media | image_url: width: 160 | image_tag: loading: 'lazy', alt: '' }}</button></li>
+          {%- endfor -%}
+        </ul>
+      {%- endif -%}
+    </div>
+
+    <div class="pdp__info" id="buybox" data-buybox>
+      <h1 class="pdp__title">{{ product.title }}</h1>
+      <p class="pdp__price"><span data-pdp-price>{{ v0.price | money }}</span> <s data-pdp-compare hidden></s> <span class="pdp__save" data-pdp-save hidden></span></p>
+      {%- if section.settings.intro != blank -%}<p class="pdp__intro">{{ section.settings.intro }}</p>{%- endif -%}
+
+      {%- assign benefits = section.blocks | where: 'type', 'benefit' -%}
+      {%- if benefits.size > 0 -%}
+        <ul class="pdp__benefits">
+          {%- for block in benefits -%}<li {{ block.shopify_attributes }}>{% render 'icon', name: 'check' %}<span>{{ block.settings.text }}</span></li>{%- endfor -%}
+        </ul>
+      {%- endif -%}
+
+      <form method="post" action="{{ routes.cart_add_url }}" data-pdp-form>
+        <input type="hidden" name="id" value="{{ v0.id }}">
+        {%- if offers.size > 0 and strap.id and belt.id -%}
+          <fieldset class="offer">
+            <legend class="offer__legend">Choose your ritual</legend>
+            {%- for block in offers -%}
+              <label class="offer__tile" {{ block.shopify_attributes }}>
+                <input type="radio" name="offer" value="{{ forloop.index0 }}" data-strap-qty="{{ block.settings.strap_qty }}" data-belt-qty="{{ block.settings.belt_qty }}"{% if block.settings.default %} checked{% endif %}>
+                <span class="offer__face">
+                  <span class="offer__text">
+                    <strong>{{ block.settings.label }}</strong>
+                    <small>{{ block.settings.sub }}</small>
+                  </span>
+                  <span class="offer__price"><b data-offer-price></b><s data-offer-compare></s></span>
+                  {%- if block.settings.badge != blank -%}<span class="offer__badge">{{ block.settings.badge }}</span>{%- endif -%}
+                </span>
+              </label>
+            {%- endfor -%}
+          </fieldset>
+        {%- endif -%}
+
+        {%- assign show_sizes = false -%}
+        {%- if belt.id and offers.size > 0 -%}{%- assign show_sizes = true -%}{%- endif -%}
+        {%- if belt.id and product.handle == belt.handle -%}{%- assign show_sizes = true -%}{%- endif -%}
+        {%- if show_sizes -%}
+          <fieldset class="opt" data-size-group>
+            <legend>Belt size <span data-size-name>{{ belt.variants[1].title | default: belt.variants[0].title }}</span></legend>
+            <div class="opt__row">
+              {%- for v in belt.variants -%}
+                <label class="chip chip--sm"><input type="radio" name="belt-size" value="{{ v.id }}" data-title="{{ v.title | escape }}"{% if forloop.index == 2 %} checked{% endif %}{% unless v.available %} disabled{% endunless %}><span class="chip__face">{{ v.title }}</span></label>
+              {%- endfor -%}
+            </div>
+            <p class="opt__help">Adjustable with velcro. Between sizes? Choose the larger one.</p>
+          </fieldset>
+        {%- endif -%}
+
+        <button class="btn btn--primary btn--block pdp__add" type="submit" data-pdp-add{% unless product.available %} disabled{% endunless %}>
+          <span class="btn__label">{% if product.available %}Add to cart{% else %}Sold out{% endif %}</span>
+        </button>
+      </form>
+
+      <p class="pdp__eta">{% render 'icon', name: 'package' %}<span>Order today, estimated delivery <strong data-eta>{{ settings.delivery_text }}</strong>.</span></p>
+
+      <ul class="assure">
+        <li>{% render 'icon', name: 'truck' %}<span><strong>Free tracked shipping</strong> across the US</span></li>
+        <li>{% render 'icon', name: 'return' %}<span><strong>{{ settings.return_days }}-day returns</strong> on unused items</span></li>
+        <li>{% render 'icon', name: 'lock' %}<span><strong>Secure checkout</strong> with card, Apple Pay or PayPal</span></li>
+      </ul>
+
+      <div class="acc acc--tight" data-acc>
+        <div class="acc__item">
+          <h3><button class="acc__btn" type="button" aria-expanded="false" aria-controls="pd-{{ section.id }}">Details<span class="acc__icon">{% render 'icon', name: 'caret' %}</span></button></h3>
+          <div class="acc__panel" id="pd-{{ section.id }}" role="region"><div class="rte">{{ product.description }}</div></div>
+        </div>
+        <div class="acc__item">
+          <h3><button class="acc__btn" type="button" aria-expanded="false" aria-controls="ps-{{ section.id }}">Shipping and returns<span class="acc__icon">{% render 'icon', name: 'caret' %}</span></button></h3>
+          <div class="acc__panel" id="ps-{{ section.id }}" role="region"><div class="rte">
+            <p>Free tracked shipping to the US. Delivery takes {{ settings.delivery_text }}, and we email your tracking link as soon as your parcel ships. It arrives in plain, protective packaging from our fulfilment partner.</p>
+            <p>Return unused items within {{ settings.return_days }} days of delivery. If something arrives damaged, we replace it or refund you.</p>
+          </div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="buybar" data-buybar hidden>
+    <div class="buybar__info"><strong data-buybar-price>{{ v0.price | money }}</strong><span data-buybar-label>{{ product.title }}</span></div>
+    <button class="btn btn--primary" type="button" data-buybar-add>Add to cart</button>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Product",
+  "settings": [
+    { "type": "textarea", "id": "intro", "label": "Intro line" }
+  ],
+  "blocks": [
+    { "type": "benefit", "name": "Benefit", "settings": [ { "type": "text", "id": "text", "label": "Text" } ] },
+    { "type": "offer", "name": "Ritual offer", "settings": [
+      { "type": "text", "id": "label", "label": "Label" },
+      { "type": "text", "id": "sub", "label": "What's inside" },
+      { "type": "text", "id": "badge", "label": "Badge" },
+      { "type": "number", "id": "strap_qty", "label": "Straps", "default": 1 },
+      { "type": "number", "id": "belt_qty", "label": "Belts", "default": 0 },
+      { "type": "checkbox", "id": "default", "label": "Selected by default", "default": false }
+    ] }
+  ]
+}
+{% endschema %}

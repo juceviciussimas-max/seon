@@ -1,0 +1,28 @@
+<section class="section faq" id="faq" aria-labelledby="faq-title-{{ section.id }}">
+  <div class="container faq__wrap">
+    <h2 id="faq-title-{{ section.id }}" class="section__title">{{ section.settings.heading }}</h2>
+    <div class="acc" data-acc>
+      {%- for block in section.blocks -%}
+        <div class="acc__item" {{ block.shopify_attributes }}>
+          <h3><button class="acc__btn" type="button" aria-expanded="false" aria-controls="q-{{ block.id }}">{{ block.settings.q }}<span class="acc__icon">{% render 'icon', name: 'caret' %}</span></button></h3>
+          <div class="acc__panel" id="q-{{ block.id }}" role="region"><div>{{ block.settings.a }}</div></div>
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+{% schema %}
+{
+  "name": "FAQ",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Before you order" }
+  ],
+  "blocks": [
+    { "type": "q", "name": "Question", "settings": [
+      { "type": "text", "id": "q", "label": "Question" },
+      { "type": "richtext", "id": "a", "label": "Answer" }
+    ] }
+  ],
+  "presets": [{ "name": "FAQ" }]
+}
+{% endschema %}

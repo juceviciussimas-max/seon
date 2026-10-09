@@ -1,0 +1,31 @@
+{%- comment -%}
+  Product data for the bundle picker, quick-add cards and cart upsells.
+  Prices are in cents, as Shopify's cart API uses.
+{%- endcomment -%}
+{%- assign strap = all_products[settings.strap_handle] -%}
+{%- assign belt = all_products[settings.belt_handle] -%}
+<script>
+  window.Seon = {
+    routes: {
+      root: {{ routes.root_url | json }},
+      cart: {{ routes.cart_url | json }},
+      cartAdd: {{ routes.cart_add_url | json }},
+      cartChange: {{ routes.cart_change_url | json }}
+    },
+    moneyFormat: {{ shop.money_format | json }},
+    bundleDiscount: {{ settings.bundle_discount | default: '9.99' | times: 100 | round }},
+    delivery: { min: {{ settings.delivery_min | default: 7 }}, max: {{ settings.delivery_max | default: 12 }} },
+    products: {
+      strap: {% if strap.id %}{
+        id: {{ strap.id }}, handle: {{ strap.handle | json }}, title: {{ strap.title | json }}, url: {{ strap.url | json }},
+        image: {{ strap.featured_image | image_url: width: 240 | json }},
+        variants: [{% for v in strap.variants %}{ id: {{ v.id }}, title: {{ v.title | json }}, price: {{ v.price }}, available: {{ v.available }} }{% unless forloop.last %},{% endunless %}{% endfor %}]
+      }{% else %}null{% endif %},
+      belt: {% if belt.id %}{
+        id: {{ belt.id }}, handle: {{ belt.handle | json }}, title: {{ belt.title | json }}, url: {{ belt.url | json }},
+        image: {{ belt.featured_image | image_url: width: 240 | json }},
+        variants: [{% for v in belt.variants %}{ id: {{ v.id }}, title: {{ v.title | json }}, price: {{ v.price }}, available: {{ v.available }} }{% unless forloop.last %},{% endunless %}{% endfor %}]
+      }{% else %}null{% endif %}
+    }
+  };
+</script>

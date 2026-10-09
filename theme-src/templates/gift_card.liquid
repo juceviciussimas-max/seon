@@ -1,0 +1,3 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Gift card | {{ shop.name }}</title>{{ 'seon.css' | asset_url | stylesheet_tag }}</head>
+<body><main class="container prose"><h1>Your {{ shop.name }} gift card</h1><p class="lead">Balance: {{ gift_card.balance | money }}</p><p>Code: <strong>{{ gift_card.code | format_code }}</strong></p><a class="btn btn--primary" href="{{ shop.url }}">Shop now</a></main></body></html>

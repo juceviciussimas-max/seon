@@ -1,0 +1,168 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-product",
+      "settings": {
+        "intro": "A light, almost invisible belt that reminds your shoulders to sit back. Thin enough to wear under a top."
+      },
+      "blocks": {
+        "b0": {
+          "type": "benefit",
+          "settings": {
+            "text": "Soft white straps with a flannel-lined back pad"
+          }
+        },
+        "b1": {
+          "type": "benefit",
+          "settings": {
+            "text": "Adjustable velcro, sizes S to XL"
+          }
+        },
+        "b2": {
+          "type": "benefit",
+          "settings": {
+            "text": "Wear it at your desk, 20 minutes a day"
+          }
+        },
+        "o0": {
+          "type": "offer",
+          "settings": {
+            "label": "The belt",
+            "sub": "1 Posture Belt",
+            "badge": "",
+            "strap_qty": 0,
+            "belt_qty": 1,
+            "default": false
+          }
+        },
+        "o1": {
+          "type": "offer",
+          "settings": {
+            "label": "The Seon Set",
+            "sub": "Belt + V-line strap",
+            "badge": "Most popular",
+            "strap_qty": 1,
+            "belt_qty": 1,
+            "default": true
+          }
+        },
+        "o2": {
+          "type": "offer",
+          "settings": {
+            "label": "The Ritual Box",
+            "sub": "Belt + 2 V-line straps",
+            "badge": "Best value",
+            "strap_qty": 2,
+            "belt_qty": 1,
+            "default": false
+          }
+        }
+      },
+      "block_order": [
+        "b0",
+        "b1",
+        "b2",
+        "o0",
+        "o1",
+        "o2"
+      ]
+    },
+    "ritual": {
+      "type": "ritual",
+      "settings": {
+        "heading": "How to wear it"
+      },
+      "blocks": {
+        "s0": {
+          "type": "step",
+          "settings": {
+            "title": "Arms through the loops",
+            "text": "Like putting on a backpack, with the pad at the back.",
+            "fallback": "belt-1.webp"
+          }
+        },
+        "s1": {
+          "type": "step",
+          "settings": {
+            "title": "Pad between your shoulder blades",
+            "text": "It sits flat and stays hidden under a top.",
+            "fallback": "belt-1.webp"
+          }
+        },
+        "s2": {
+          "type": "step",
+          "settings": {
+            "title": "Adjust the velcro",
+            "text": "Firm, never tight. Start with 20 minutes a day at your desk.",
+            "fallback": "belt-1.webp"
+          }
+        }
+      },
+      "block_order": [
+        "s0",
+        "s1",
+        "s2"
+      ]
+    },
+    "pairs": {
+      "type": "pairs",
+      "settings": {}
+    },
+    "faq": {
+      "type": "faq",
+      "settings": {
+        "heading": "Questions"
+      },
+      "blocks": {
+        "q0": {
+          "type": "q",
+          "settings": {
+            "q": "How long does delivery take?",
+            "a": "<p>Delivery to the US takes 7 to 12 business days and shipping is free. You get a tracking link by email as soon as your parcel ships.</p>"
+          }
+        },
+        "q1": {
+          "type": "q",
+          "settings": {
+            "q": "How does the bundle discount work?",
+            "a": "<p>Whenever a posture belt and a V-line strap are in your cart together, each strap (up to two) gets $9.99 off automatically. No code needed.</p>"
+          }
+        },
+        "q2": {
+          "type": "q",
+          "settings": {
+            "q": "Which belt size should I choose?",
+            "a": "<p>The belt adjusts with velcro. Choose your usual top size, and if you are between sizes, choose the larger one.</p>"
+          }
+        },
+        "q3": {
+          "type": "q",
+          "settings": {
+            "q": "How long should I wear them?",
+            "a": "<p>Start with 20 to 30 minutes a day for each. Take them off if anything feels tight or uncomfortable.</p>"
+          }
+        },
+        "q4": {
+          "type": "q",
+          "settings": {
+            "q": "How do I clean them?",
+            "a": "<p>Hand wash in cool water with a little mild soap and let them air dry. Do not tumble dry.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "q0",
+        "q1",
+        "q2",
+        "q3",
+        "q4"
+      ]
+    }
+  },
+  "order": [
+    "main",
+    "ritual",
+    "pairs",
+    "faq"
+  ]
+}

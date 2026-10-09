@@ -1,0 +1,43 @@
+<footer class="site-footer">
+  <div class="container site-footer__grid">
+    <div class="site-footer__brand">
+      <a class="brand" href="{{ routes.root_url }}"><span class="brand__name">Seon</span><span class="brand__ko" lang="ko">선</span></a>
+      <p>{{ section.settings.about }}</p>
+    </div>
+    <nav aria-label="Shop">
+      <h2>Shop</h2>
+      <ul>
+        <li><a href="{{ routes.root_url }}#shop">All products</a></li>
+        {%- if all_products[settings.strap_handle].url -%}<li><a href="{{ all_products[settings.strap_handle].url }}">V-Line Lifting Strap</a></li>{%- endif -%}
+        {%- if all_products[settings.belt_handle].url -%}<li><a href="{{ all_products[settings.belt_handle].url }}">Posture Belt</a></li>{%- endif -%}
+      </ul>
+    </nav>
+    <nav aria-label="Help">
+      <h2>Help</h2>
+      <ul>
+        <li><a href="{{ routes.root_url }}#faq">FAQ</a></li>
+        {%- if shop.shipping_policy -%}<li><a href="{{ shop.shipping_policy.url }}">Shipping</a></li>{%- endif -%}
+        {%- if shop.refund_policy -%}<li><a href="{{ shop.refund_policy.url }}">Returns</a></li>{%- endif -%}
+        {%- if shop.contact_policy -%}<li><a href="{{ shop.contact_policy.url }}">Contact</a></li>{%- endif -%}
+      </ul>
+    </nav>
+    <nav aria-label="Legal">
+      <h2>Legal</h2>
+      <ul>
+        {%- if shop.privacy_policy -%}<li><a href="{{ shop.privacy_policy.url }}">Privacy</a></li>{%- endif -%}
+        {%- if shop.terms_of_service -%}<li><a href="{{ shop.terms_of_service.url }}">Terms of service</a></li>{%- endif -%}
+      </ul>
+    </nav>
+  </div>
+  <div class="container site-footer__legal">
+    <p>&copy; {{ 'now' | date: '%Y' }} {{ shop.name }}. Comfort and self-care accessories, not medical devices.</p>
+  </div>
+</footer>
+{% schema %}
+{
+  "name": "Footer",
+  "settings": [
+    { "type": "textarea", "id": "about", "label": "About text", "default": "Korean-inspired line care for your face and posture. Shipped free across the US." }
+  ]
+}
+{% endschema %}

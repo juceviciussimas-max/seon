@@ -1,0 +1,11 @@
+{
+  "current": {
+    "strap_handle": "v-line-lifting-strap",
+    "belt_handle": "posture-belt",
+    "bundle_discount": "9.99",
+    "delivery_text": "7 to 12 business days",
+    "delivery_min": 7,
+    "delivery_max": 12,
+    "return_days": 30
+  }
+}

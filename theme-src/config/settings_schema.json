@@ -1,0 +1,27 @@
+[
+  {
+    "name": "theme_info",
+    "theme_name": "Seon",
+    "theme_version": "1.0.0",
+    "theme_author": "Seon",
+    "theme_documentation_url": "https://help.shopify.com",
+    "theme_support_url": "https://help.shopify.com"
+  },
+  {
+    "name": "Bundles",
+    "settings": [
+      { "type": "text", "id": "strap_handle", "label": "Strap product handle", "default": "v-line-lifting-strap" },
+      { "type": "text", "id": "belt_handle", "label": "Belt product handle", "default": "posture-belt" },
+      { "type": "text", "id": "bundle_discount", "label": "Discount per strap when a belt is in the cart", "default": "9.99", "info": "Must match the automatic discount in Shopify admin." }
+    ]
+  },
+  {
+    "name": "Store",
+    "settings": [
+      { "type": "text", "id": "delivery_text", "label": "Delivery time", "default": "7 to 12 business days" },
+      { "type": "number", "id": "delivery_min", "label": "Delivery min (business days)", "default": 7 },
+      { "type": "number", "id": "delivery_max", "label": "Delivery max (business days)", "default": 12 },
+      { "type": "number", "id": "return_days", "label": "Return window (days)", "default": 30 }
+    ]
+  }
+]

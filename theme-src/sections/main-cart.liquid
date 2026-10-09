@@ -1,0 +1,22 @@
+<section class="section cart-page">
+  <div class="container cart-page__wrap">
+    <h1 class="section__title">Your cart</h1>
+    <div class="cart-page__body" data-cart-page>
+      {%- if cart.item_count == 0 -%}
+        <p>Your cart is empty.</p>
+        <a class="btn btn--primary" href="{{ routes.root_url }}#shop">Shop the ritual</a>
+      {%- else -%}
+        <form action="{{ routes.cart_url }}" method="post">
+          <ul class="cart-page__lines">
+            {%- for item in cart.items -%}
+              <li>{{ item.product.title }}{% unless item.product.has_only_default_variant %}, {{ item.variant.title }}{% endunless %} × {{ item.quantity }} <span>{{ item.final_line_price | money }}</span></li>
+            {%- endfor -%}
+          </ul>
+          <p class="cart-page__total">Total {{ cart.total_price | money }}</p>
+          <button class="btn btn--primary" type="submit" name="checkout">Checkout</button>
+        </form>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+{% schema %}{ "name": "Cart" }{% endschema %}

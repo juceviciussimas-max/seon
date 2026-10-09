@@ -1,0 +1,22 @@
+{%- assign strap = all_products[settings.strap_handle] -%}
+{%- assign belt = all_products[settings.belt_handle] -%}
+<section class="section shop2" id="shop" aria-labelledby="shop-title-{{ section.id }}">
+  <div class="container">
+    <h2 id="shop-title-{{ section.id }}" class="section__title">{{ section.settings.heading }}</h2>
+    <div class="shop2__grid">
+      {% render 'offer-card', kind: 'set', wide: true, tag: 'Most popular', title: 'The Seon Set', text: 'The strap and the belt together, for your face and your shoulders.', strap_qty: 1, belt_qty: 1, image: 'hero-model-1200.webp' %}
+      {%- if strap.id -%}{% render 'product-card', product: strap %}{%- endif -%}
+      {%- if belt.id -%}{% render 'product-card', product: belt %}{%- endif -%}
+      {% render 'offer-card', kind: 'box', wide: true, flip: true, tag: 'Best value', title: 'The Ritual Box', text: 'Two V-line straps and one posture belt. One for you, one to share, or a spare for travel.', strap_qty: 2, belt_qty: 1, image: 'strap-2.webp' %}
+    </div>
+  </div>
+</section>
+{% schema %}
+{
+  "name": "Collection showcase",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading", "default": "The collection" }
+  ],
+  "presets": [{ "name": "Collection showcase" }]
+}
+{% endschema %}

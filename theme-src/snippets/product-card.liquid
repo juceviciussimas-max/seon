@@ -1,0 +1,28 @@
+{%- comment -%} Product card with one-tap add. Sizes show as pills when a product has several variants. {%- endcomment -%}
+{%- assign v0 = product.selected_or_first_available_variant -%}
+<article class="pcard" data-card>
+  <a class="pcard__media" href="{{ product.url }}" aria-label="{{ product.title | escape }}">
+    {%- if product.featured_image -%}
+      {{ product.featured_image | image_url: width: 900 | image_tag: class: 'pcard__img', loading: 'lazy', sizes: '(max-width: 860px) 92vw, 45vw', widths: '400, 600, 900', alt: product.featured_image.alt }}
+    {%- endif -%}
+  </a>
+  <div class="pcard__body">
+    <h3 class="pcard__name"><a href="{{ product.url }}">{{ product.title }}</a></h3>
+    <p class="pcard__short">{{ product.description | strip_html | truncatewords: 18 }}</p>
+    <p class="pcard__price">{{ v0.price | money }}</p>
+    {%- if product.variants.size > 1 -%}
+      <fieldset class="opt">
+        <legend>{{ product.options.first }} <span data-size-name>{{ product.variants[1].title | default: v0.title }}</span></legend>
+        <div class="opt__row">
+          {%- for v in product.variants -%}
+            <label class="chip chip--sm"><input type="radio" name="v-{{ product.id }}-{{ section.id }}" value="{{ v.id }}" data-title="{{ v.title | escape }}"{% if forloop.index == 2 %} checked{% endif %}{% unless v.available %} disabled{% endunless %}><span class="chip__face">{{ v.title }}</span></label>
+          {%- endfor -%}
+        </div>
+      </fieldset>
+    {%- endif -%}
+    <button class="btn btn--primary pcard__add" type="button" data-quick-add data-variant="{{ v0.id }}"{% unless product.available %} disabled{% endunless %}>
+      <span class="btn__label">{% if product.available %}Add to cart{% else %}Sold out{% endif %}</span>
+    </button>
+    <a class="pcard__more" href="{{ product.url }}">Details and how to wear</a>
+  </div>
+</article>

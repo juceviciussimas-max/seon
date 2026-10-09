@@ -1,0 +1,17 @@
+<section class="closer" aria-labelledby="closer-title-{{ section.id }}">
+  <div class="container closer__inner">
+    <h2 id="closer-title-{{ section.id }}">{{ section.settings.heading }}</h2>
+    <a class="btn btn--primary" href="{{ section.settings.link | default: '#shop' }}" data-scroll-to>{{ section.settings.button }}</a>
+  </div>
+</section>
+{% schema %}
+{
+  "name": "Closing panel",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Ten minutes a day, just for you." },
+    { "type": "text", "id": "button", "label": "Button", "default": "Shop the ritual" },
+    { "type": "text", "id": "link", "label": "Link", "default": "#shop" }
+  ],
+  "presets": [{ "name": "Closing panel" }]
+}
+{% endschema %}

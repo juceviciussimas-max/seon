@@ -1,0 +1,37 @@
+<section class="s-hero" data-hero aria-labelledby="hero-title-{{ section.id }}">
+  <div class="container s-hero__grid">
+    <div class="s-hero__copy">
+      <h1 id="hero-title-{{ section.id }}" class="s-hero__title">
+        <span class="line"><span>{{ section.settings.line1 }}</span></span>
+        <span class="line"><span>{{ section.settings.line2 }}</span></span>
+      </h1>
+      <p class="s-hero__lead">{{ section.settings.text }}</p>
+      <div class="s-hero__cta">
+        <a class="btn btn--primary" href="{{ section.settings.button_link | default: '#shop' }}" data-scroll-to>{{ section.settings.button_label }}</a>
+        <span class="s-hero__note">{{ section.settings.note }}</span>
+      </div>
+    </div>
+    <figure class="s-hero__media" data-hero-media>
+      {%- if section.settings.image -%}
+        {{ section.settings.image | image_url: width: 1400 | image_tag: loading: 'eager', fetchpriority: 'high', sizes: '(max-width: 860px) 92vw, 44vw', widths: '600, 900, 1200, 1400', alt: section.settings.image.alt }}
+      {%- else -%}
+        <img src="{{ 'hero-model-1200.webp' | asset_url }}" srcset="{{ 'hero-model-700.webp' | asset_url }} 700w, {{ 'hero-model-1200.webp' | asset_url }} 1200w" sizes="(max-width: 860px) 92vw, 44vw" width="1200" height="1490" alt="A woman with her eyes closed wearing a soft pink V-line strap around her chin" fetchpriority="high">
+      {%- endif -%}
+    </figure>
+  </div>
+</section>
+{% schema %}
+{
+  "name": "Hero",
+  "settings": [
+    { "type": "text", "id": "line1", "label": "Headline line 1", "default": "Ten quiet minutes" },
+    { "type": "text", "id": "line2", "label": "Headline line 2", "default": "for your line." },
+    { "type": "textarea", "id": "text", "label": "Text", "default": "A soft V-line strap and a light posture belt, for the evenings you look after yourself." },
+    { "type": "text", "id": "button_label", "label": "Button", "default": "Shop the ritual" },
+    { "type": "text", "id": "button_link", "label": "Button link", "default": "#shop" },
+    { "type": "text", "id": "note", "label": "Note next to button", "default": "Free US shipping" },
+    { "type": "image_picker", "id": "image", "label": "Image (optional, replaces the default)" }
+  ],
+  "presets": [{ "name": "Hero" }]
+}
+{% endschema %}

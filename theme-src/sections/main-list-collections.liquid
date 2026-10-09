@@ -1,0 +1,5 @@
+<section class="container prose">
+  <h1>Collections</h1>
+  <ul>{%- for c in collections -%}<li><a href="{{ c.url }}">{{ c.title }}</a></li>{%- endfor -%}</ul>
+</section>
+{% schema %}{ "name": "Collections list" }{% endschema %}

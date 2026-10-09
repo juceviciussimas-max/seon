@@ -1,0 +1,29 @@
+<header class="site-header" data-header>
+  <div class="container site-header__row">
+    <a class="brand" href="{{ routes.root_url }}" aria-label="{{ shop.name }}, home">
+      <span class="brand__name">Seon</span><span class="brand__ko" lang="ko">선</span>
+    </a>
+    <nav class="nav" aria-label="Main">
+      {%- assign menu = linklists[section.settings.menu] -%}
+      {%- if menu.links.size > 0 -%}
+        {%- for link in menu.links -%}<a href="{{ link.url }}">{{ link.title }}</a>{%- endfor -%}
+      {%- else -%}
+        <a href="{{ routes.root_url }}#shop">Shop</a>
+        <a href="{{ routes.root_url }}#ritual">How to wear</a>
+        <a href="{{ routes.root_url }}#faq">FAQ</a>
+      {%- endif -%}
+    </nav>
+    <a class="cart-btn" href="{{ routes.cart_url }}" data-cart-open aria-label="Open cart, {{ cart.item_count }} items">
+      {% render 'icon', name: 'bag' %}<span class="cart-btn__label">Cart</span>
+      <span class="cart-btn__count" data-cart-count{% if cart.item_count == 0 %} hidden{% endif %}>{{ cart.item_count }}</span>
+    </a>
+  </div>
+</header>
+{% schema %}
+{
+  "name": "Header",
+  "settings": [
+    { "type": "link_list", "id": "menu", "label": "Menu", "default": "main-menu" }
+  ]
+}
+{% endschema %}
