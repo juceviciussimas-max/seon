@@ -1,70 +1,42 @@
 {
   "sections": {
     "main": {
-      "type": "main-product",
+      "type": "main-bundle",
       "settings": {
-        "intro": "A light, almost invisible belt that reminds your shoulders to sit back. Thin enough to wear under a top."
+        "title": "The Ritual Box",
+        "badge": "Best value",
+        "intro": "Two V-line straps and one posture belt. Keep one strap for yourself, share the other, or pack it for travel.",
+        "strap_qty": 2,
+        "belt_qty": 1,
+        "image_1": "box-flat",
+        "image_1_alt": "Two pink V-line straps and one white posture belt laid out together",
+        "image_2": "set-lifestyle",
+        "image_2_alt": "A woman wearing the pink V-line strap and the white posture belt"
       },
       "blocks": {
         "b0": {
           "type": "benefit",
           "settings": {
-            "text": "Soft white straps with a flannel-lined back pad"
+            "text": "Two straps and a belt, the most you save"
           }
         },
         "b1": {
           "type": "benefit",
           "settings": {
-            "text": "Adjustable velcro, sizes S to XL"
+            "text": "One strap to share or keep for travel"
           }
         },
         "b2": {
           "type": "benefit",
           "settings": {
-            "text": "Wear it at your desk, 20 minutes a day"
-          }
-        },
-        "o0": {
-          "type": "offer",
-          "settings": {
-            "label": "The belt",
-            "sub": "1 Posture Belt",
-            "badge": "",
-            "strap_qty": 0,
-            "belt_qty": 1,
-            "default": false
-          }
-        },
-        "o1": {
-          "type": "offer",
-          "settings": {
-            "label": "The Seon Set",
-            "sub": "Belt + V-line strap",
-            "badge": "Most popular",
-            "strap_qty": 1,
-            "belt_qty": 1,
-            "default": true
-          }
-        },
-        "o2": {
-          "type": "offer",
-          "settings": {
-            "label": "The Ritual Box",
-            "sub": "Belt + 2 V-line straps",
-            "badge": "Best value",
-            "strap_qty": 2,
-            "belt_qty": 1,
-            "default": false
+            "text": "Free tracked shipping across the US"
           }
         }
       },
       "block_order": [
         "b0",
         "b1",
-        "b2",
-        "o0",
-        "o1",
-        "o2"
+        "b2"
       ]
     },
     "ritual": {
@@ -73,45 +45,73 @@
         "heading": "How to wear it"
       },
       "blocks": {
-        "s0": {
-          "type": "step",
-          "settings": {
-            "title": "Arms through the loops",
-            "text": "Like putting on a backpack, with the pad at the back.",
-            "fallback": "belt-1.webp"
-          }
-        },
         "s1": {
           "type": "step",
           "settings": {
-            "title": "Pad between your shoulder blades",
-            "text": "It sits flat and stays hidden under a top.",
-            "fallback": "belt-1.webp"
+            "title": "Cup your chin",
+            "text": "Place the wide mesh part under your chin and jawline.",
+            "fallback": "strap-1.webp"
           }
         },
         "s2": {
           "type": "step",
           "settings": {
-            "title": "Adjust the velcro",
-            "text": "Firm, never tight. Start with 20 minutes a day at your desk.",
-            "fallback": "belt-1.webp"
+            "title": "Ears through",
+            "text": "Slip each ear through the side openings so it sits flat.",
+            "fallback": "strap-2.webp"
+          }
+        },
+        "s3": {
+          "type": "step",
+          "settings": {
+            "title": "Close and rest",
+            "text": "Fasten the velcro on top, snug but comfortable. Wear it for 20 to 30 minutes while you read or do your skincare.",
+            "fallback": "hero-model-700.webp"
           }
         }
       },
       "block_order": [
-        "s0",
         "s1",
-        "s2"
+        "s2",
+        "s3"
       ]
     },
-    "pairs": {
-      "type": "pairs",
-      "settings": {}
+    "posture": {
+      "type": "posture",
+      "settings": {},
+      "blocks": {
+        "t1": {
+          "type": "tip",
+          "settings": {
+            "title": "Arms through the loops",
+            "text": "like putting on a backpack"
+          }
+        },
+        "t2": {
+          "type": "tip",
+          "settings": {
+            "title": "Pad between your shoulder blades",
+            "text": "it sits flat under your clothes"
+          }
+        },
+        "t3": {
+          "type": "tip",
+          "settings": {
+            "title": "Adjust the velcro",
+            "text": "firm, never tight; start with 20 minutes a day"
+          }
+        }
+      },
+      "block_order": [
+        "t1",
+        "t2",
+        "t3"
+      ]
     },
     "faq": {
       "type": "faq",
       "settings": {
-        "heading": "Questions"
+        "heading": "Before you order"
       },
       "blocks": {
         "q0": {
@@ -142,11 +142,11 @@
             "a": "<p>Start with 20 to 30 minutes a day for each. Take them off if anything feels tight or uncomfortable.</p>"
           }
         },
-        "q4": {
+        "q6": {
           "type": "q",
           "settings": {
-            "q": "How do I clean them?",
-            "a": "<p>Hand wash in cool water with a little mild soap and let them air dry. Do not tumble dry.</p>"
+            "q": "What if I change my mind?",
+            "a": "<p>Return unused items within 30 days of delivery. If something arrives damaged, we replace it or refund you.</p>"
           }
         }
       },
@@ -155,7 +155,7 @@
         "q1",
         "q2",
         "q3",
-        "q4"
+        "q6"
       ]
     },
     "steps": {
@@ -166,7 +166,7 @@
   "order": [
     "main",
     "ritual",
-    "pairs",
+    "posture",
     "steps",
     "faq"
   ]

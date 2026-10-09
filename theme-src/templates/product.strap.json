@@ -157,12 +157,17 @@
         "q3",
         "q4"
       ]
+    },
+    "steps": {
+      "type": "order-steps",
+      "settings": {}
     }
   },
   "order": [
     "main",
     "ritual",
     "pairs",
+    "steps",
     "faq"
   ]
 }

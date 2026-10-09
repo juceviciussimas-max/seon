@@ -1,0 +1,17 @@
+<section class="section steps-sec" aria-labelledby="steps-title-{{ section.id }}">
+  <div class="container">
+    <h2 id="steps-title-{{ section.id }}" class="section__title" data-reveal>{{ section.settings.heading }}</h2>
+    <ol class="steps-row">
+      <li data-reveal><span class="steps-row__icon">{% render 'icon', name: 'bag' %}</span><strong>Order today</strong><p>Your confirmation email arrives right away.</p></li>
+      <li data-reveal><span class="steps-row__icon">{% render 'icon', name: 'package' %}</span><strong>It ships, tracked</strong><p>We email your tracking link the moment your parcel leaves our fulfilment partner.</p></li>
+      <li data-reveal><span class="steps-row__icon">{% render 'icon', name: 'truck' %}</span><strong>At your door</strong><p>Free delivery in {{ settings.delivery_text }}. {{ settings.return_days }} days to return anything unused.</p></li>
+    </ol>
+  </div>
+</section>
+{% schema %}
+{
+  "name": "Order steps",
+  "settings": [ { "type": "text", "id": "heading", "label": "Heading", "default": "How your order arrives" } ],
+  "presets": [{ "name": "Order steps" }]
+}
+{% endschema %}

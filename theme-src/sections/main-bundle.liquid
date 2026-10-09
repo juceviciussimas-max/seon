@@ -1,0 +1,124 @@
+{%- comment -%}
+  Bundle page (Seon Set, Ritual Box). Adds the real strap and belt variants; the automatic
+  discount in Shopify admin brings the cart to the bundle price.
+{%- endcomment -%}
+{%- assign strap = all_products[settings.strap_handle] -%}
+{%- assign belt = all_products[settings.belt_handle] -%}
+{%- assign sq = section.settings.strap_qty | default: 1 -%}
+{%- assign bq = section.settings.belt_qty | default: 1 -%}
+{%- if strap.id and belt.id -%}
+  {%- assign disc_each = settings.bundle_discount | default: '9.99' | times: 100 | round -%}
+  {%- assign disc_qty = sq -%}{%- if disc_qty > 2 -%}{%- assign disc_qty = 2 -%}{%- endif -%}
+  {%- assign belt_total = belt.price | times: bq -%}
+  {%- assign full = strap.price | times: sq | plus: belt_total -%}
+  {%- assign save = 0 -%}{%- if bq > 0 -%}{%- assign save = disc_each | times: disc_qty -%}{%- endif -%}
+  {%- assign now = full | minus: save -%}
+  {%- assign benefits = section.blocks | where: 'type', 'benefit' -%}
+  <section class="pdp bundle" data-bundle data-offer data-strap-qty="{{ sq }}" data-belt-qty="{{ bq }}">
+    <div class="container pdp__grid">
+      <div class="pdp__gallery" data-gallery>
+        <div class="pdp__main" data-swipe>
+          <button class="pdp__arrow pdp__arrow--prev" type="button" data-gallery-step="-1" aria-label="Previous photo">{% render 'icon', name: 'arrow' %}</button>
+          <button class="pdp__arrow pdp__arrow--next" type="button" data-gallery-step="1" aria-label="Next photo">{% render 'icon', name: 'arrow' %}</button>
+          <img data-gallery-main src="{{ section.settings.image_1 | append: '-1200.webp' | asset_url }}" srcset="{{ section.settings.image_1 | append: '-700.webp' | asset_url }} 700w, {{ section.settings.image_1 | append: '-1200.webp' | asset_url }} 1200w" sizes="(max-width: 900px) 92vw, 50vw" alt="{{ section.settings.image_1_alt | escape }}" width="1200" height="1200" fetchpriority="high">
+        </div>
+        <ul class="pdp__thumbs" aria-label="Photos">
+          <li><button class="thumb" type="button" data-thumb data-src="{{ section.settings.image_1 | append: '-1200.webp' | asset_url }}" data-alt="{{ section.settings.image_1_alt | escape }}" aria-current="true" aria-label="Show photo 1"><img src="{{ section.settings.image_1 | append: '-700.webp' | asset_url }}" alt="" loading="lazy" width="72" height="72"></button></li>
+          {%- if section.settings.image_2 != blank -%}
+            <li><button class="thumb" type="button" data-thumb data-src="{{ section.settings.image_2 | append: '-1200.webp' | asset_url }}" data-alt="{{ section.settings.image_2_alt | escape }}" aria-label="Show photo 2"><img src="{{ section.settings.image_2 | append: '-700.webp' | asset_url }}" alt="" loading="lazy" width="72" height="72"></button></li>
+          {%- endif -%}
+          {%- for p in (1..2) -%}
+            {%- if forloop.first -%}{%- assign item = strap -%}{%- else -%}{%- assign item = belt -%}{%- endif -%}
+            {%- if item.featured_image -%}
+              <li><button class="thumb" type="button" data-thumb data-src="{{ item.featured_image | image_url: width: 1400 }}" data-alt="{{ item.featured_image.alt | escape }}" aria-label="Show the {{ item.title | escape }}">{{ item.featured_image | image_url: width: 160 | image_tag: loading: 'lazy', alt: '' }}</button></li>
+            {%- endif -%}
+          {%- endfor -%}
+        </ul>
+      </div>
+
+      <div class="pdp__info" id="buybox">
+        {%- if section.settings.badge != blank -%}<p class="pdp__badge">{{ section.settings.badge }}</p>{%- endif -%}
+        <h1 class="pdp__title">{{ section.settings.title }}</h1>
+        <p class="pdp__price"><span>{{ now | money }}</span>{% if save > 0 %} <s>{{ full | money }}</s> <span class="pdp__save">Save {{ save | money }}</span>{% endif %}</p>
+        {%- if section.settings.intro != blank -%}<p class="pdp__intro">{{ section.settings.intro }}</p>{%- endif -%}
+
+        {%- if benefits.size > 0 -%}
+          <ul class="pdp__benefits">
+            {%- for block in benefits -%}<li {{ block.shopify_attributes }}>{% render 'icon', name: 'check' %}<span>{{ block.settings.text }}</span></li>{%- endfor -%}
+          </ul>
+        {%- endif -%}
+
+        <div class="inside">
+          <p class="inside__label">What's inside</p>
+          <ul class="inside__list">
+            <li><a href="{{ strap.url }}">{{ strap.featured_image | image_url: width: 160 | image_tag: loading: 'lazy', alt: '' }}<span><strong>{{ sq }} × {{ strap.title }}</strong><small>{{ strap.price | money }} each on its own</small></span>{% render 'icon', name: 'arrow' %}</a></li>
+            <li><a href="{{ belt.url }}">{{ belt.featured_image | image_url: width: 160 | image_tag: loading: 'lazy', alt: '' }}<span><strong>{{ bq }} × {{ belt.title }}</strong><small>In your size, {{ belt.price | money }} on its own</small></span>{% render 'icon', name: 'arrow' %}</a></li>
+          </ul>
+        </div>
+
+        <fieldset class="opt" data-size-group>
+          <legend>Belt size <span data-size-name>{{ belt.variants[1].title | default: belt.variants[0].title }}</span></legend>
+          <div class="opt__row">
+            {%- for v in belt.variants -%}
+              <label class="chip chip--sm"><input type="radio" name="bundle-size-{{ section.id }}" value="{{ v.id }}" data-title="{{ v.title | escape }}"{% if forloop.index == 2 %} checked{% endif %}{% unless v.available %} disabled{% endunless %}><span class="chip__face">{{ v.title }}</span></label>
+            {%- endfor -%}
+          </div>
+          <p class="opt__help">Adjustable with velcro. Between sizes? Choose the larger one.</p>
+        </fieldset>
+
+        <button class="btn btn--primary btn--block pdp__add" type="button" data-offer-add data-main-add><span class="btn__label">Add to cart, {{ now | money }}</span></button>
+        {% render 'protection' %}
+
+        {% render 'stock-line', available: true %}
+        {% render 'pay-icons' %}
+
+        <ul class="assure">
+          <li>{% render 'icon', name: 'truck' %}<span><strong>Free tracked shipping</strong> across the US</span></li>
+          <li>{% render 'icon', name: 'return' %}<span><strong>{{ settings.return_days }}-day returns</strong> on unused items</span></li>
+          <li>{% render 'icon', name: 'lock' %}<span><strong>Secure checkout</strong> with card, Apple Pay or PayPal</span></li>
+        </ul>
+
+        <div class="acc acc--tight" data-acc>
+          <div class="acc__item">
+            <h3><button class="acc__btn" type="button" aria-expanded="false" aria-controls="bh-{{ section.id }}">How to wear them<span class="acc__icon">{% render 'icon', name: 'caret' %}</span></button></h3>
+            <div class="acc__panel" id="bh-{{ section.id }}" role="region"><div class="rte">
+              <p><strong>The strap.</strong> Cup your chin with the wide mesh part, slip your ears through the side openings and fasten the velcro on top. Snug, never tight. Wear it for 20 to 30 minutes while you read or do your skincare.</p>
+              <p><strong>The belt.</strong> Arms through the loops like a backpack, pad between your shoulder blades, then adjust the velcro. Start with 20 minutes a day.</p>
+            </div></div>
+          </div>
+          <div class="acc__item">
+            <h3><button class="acc__btn" type="button" aria-expanded="false" aria-controls="bs-{{ section.id }}">Shipping and returns<span class="acc__icon">{% render 'icon', name: 'caret' %}</span></button></h3>
+            <div class="acc__panel" id="bs-{{ section.id }}" role="region"><div class="rte">
+              <p>Free tracked shipping to the US. Delivery takes {{ settings.delivery_text }}, and we email your tracking link as soon as your parcel ships. It arrives in plain, protective packaging from our fulfilment partner.</p>
+              <p>Return unused items within {{ settings.return_days }} days of delivery. If something arrives damaged, we replace it or refund you.</p>
+            </div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="buybar" data-buybar hidden>
+      <div class="buybar__info"><strong>{{ now | money }}</strong><span>{{ section.settings.title }}</span></div>
+      <button class="btn btn--primary" type="button" data-offer-add>Add to cart</button>
+    </div>
+  </section>
+{%- endif -%}
+{% schema %}
+{
+  "name": "Bundle",
+  "settings": [
+    { "type": "text", "id": "title", "label": "Title", "default": "The Seon Set" },
+    { "type": "text", "id": "badge", "label": "Badge", "default": "Most popular" },
+    { "type": "textarea", "id": "intro", "label": "Intro" },
+    { "type": "number", "id": "strap_qty", "label": "Straps", "default": 1 },
+    { "type": "number", "id": "belt_qty", "label": "Belts", "default": 1 },
+    { "type": "text", "id": "image_1", "label": "Main image asset (base name)", "default": "set-lifestyle" },
+    { "type": "text", "id": "image_1_alt", "label": "Main image alt text" },
+    { "type": "text", "id": "image_2", "label": "Second image asset (base name)", "default": "set-flat" },
+    { "type": "text", "id": "image_2_alt", "label": "Second image alt text" }
+  ],
+  "blocks": [
+    { "type": "benefit", "name": "Benefit", "settings": [ { "type": "text", "id": "text", "label": "Text" } ] }
+  ]
+}
+{% endschema %}

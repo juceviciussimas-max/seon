@@ -1,14 +1,17 @@
+{%- assign strap = all_products[settings.strap_handle] -%}
+{%- assign belt = all_products[settings.belt_handle] -%}
+{%- assign menu = linklists[section.settings.menu] -%}
 <header class="site-header" data-header>
   <div class="container site-header__row">
+    <button class="icon-btn menu-btn" type="button" data-menu-open aria-label="Open menu" aria-haspopup="dialog" aria-controls="site-menu">{% render 'icon', name: 'list' %}</button>
     <a class="brand" href="{{ routes.root_url }}" aria-label="{{ shop.name }}, home">
       <span class="brand__name">Seon</span><span class="brand__ko" lang="ko">선</span>
     </a>
     <nav class="nav" aria-label="Main">
-      {%- assign menu = linklists[section.settings.menu] -%}
       {%- if menu.links.size > 0 -%}
-        {%- for link in menu.links -%}<a href="{{ link.url }}">{{ link.title }}</a>{%- endfor -%}
+        {%- for link in menu.links -%}<a href="{{ link.url }}"{% if link.current %} aria-current="page"{% endif %}>{{ link.title }}</a>{%- endfor -%}
       {%- else -%}
-        <a href="{{ routes.root_url }}#shop">Shop</a>
+        <a href="{{ routes.all_products_collection_url }}">Shop</a>
         <a href="{{ routes.root_url }}#ritual">How to wear</a>
         <a href="{{ routes.root_url }}#faq">FAQ</a>
       {%- endif -%}
@@ -19,11 +22,44 @@
     </a>
   </div>
 </header>
+
+<div class="menu" id="site-menu" data-menu hidden>
+  <div class="menu__scrim" data-menu-close></div>
+  <div class="menu__panel" role="dialog" aria-modal="true" aria-label="Menu" tabindex="-1">
+    <div class="menu__head">
+      <a class="brand" href="{{ routes.root_url }}"><span class="brand__name">Seon</span><span class="brand__ko" lang="ko">선</span></a>
+      <button class="icon-btn" type="button" data-menu-close aria-label="Close menu">{% render 'icon', name: 'x' %}</button>
+    </div>
+    <nav class="menu__body" aria-label="Menu">
+      <ul class="menu__links">
+        {%- if menu.links.size > 0 -%}
+          {%- for link in menu.links -%}<li><a href="{{ link.url }}" data-menu-close>{{ link.title }}</a></li>{%- endfor -%}
+        {%- else -%}
+          <li><a href="{{ routes.all_products_collection_url }}" data-menu-close>Shop</a></li>
+          <li><a href="{{ routes.root_url }}#ritual" data-menu-close>How to wear</a></li>
+          <li><a href="{{ routes.root_url }}#faq" data-menu-close>FAQ</a></li>
+        {%- endif -%}
+      </ul>
+      {%- if strap.id and belt.id -%}
+        <p class="menu__label">Shop by piece</p>
+        <ul class="menu__pieces">
+          <li><a href="{{ section.settings.set_url }}" data-menu-close><img src="{{ 'set-lifestyle-700.webp' | asset_url }}" alt="" width="64" height="80" loading="lazy"><span><strong>The Seon Set</strong><small>Strap and belt, save {{ settings.bundle_discount | times: 100 | round | money }}</small></span></a></li>
+          <li><a href="{{ section.settings.box_url }}" data-menu-close><img src="{{ 'box-flat-700.webp' | asset_url }}" alt="" width="64" height="80" loading="lazy"><span><strong>The Ritual Box</strong><small>Two straps and a belt</small></span></a></li>
+          <li><a href="{{ strap.url }}" data-menu-close>{{ strap.featured_image | image_url: width: 160 | image_tag: loading: 'lazy', alt: '' }}<span><strong>{{ strap.title }}</strong><small>{{ strap.price | money }}</small></span></a></li>
+          <li><a href="{{ belt.url }}" data-menu-close>{{ belt.featured_image | image_url: width: 160 | image_tag: loading: 'lazy', alt: '' }}<span><strong>{{ belt.title }}</strong><small>{{ belt.price | money }}</small></span></a></li>
+        </ul>
+      {%- endif -%}
+    </nav>
+    <p class="menu__note">{% render 'icon', name: 'truck' %}<span>Free tracked US shipping. {{ settings.return_days }}-day returns.</span></p>
+  </div>
+</div>
 {% schema %}
 {
   "name": "Header",
   "settings": [
-    { "type": "link_list", "id": "menu", "label": "Menu", "default": "main-menu" }
+    { "type": "link_list", "id": "menu", "label": "Menu", "default": "main-menu" },
+    { "type": "text", "id": "set_url", "label": "Seon Set page link", "default": "/pages/seon-set" },
+    { "type": "text", "id": "box_url", "label": "Ritual Box page link", "default": "/pages/ritual-box" }
   ]
 }
 {% endschema %}

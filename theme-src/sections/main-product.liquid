@@ -5,10 +5,14 @@
 <section class="pdp" data-pdp data-handle="{{ product.handle }}">
   <div class="container pdp__grid">
     <div class="pdp__gallery" data-gallery>
-      <div class="pdp__main">
+      <div class="pdp__main" data-swipe>
         {%- assign first_media = product.featured_media -%}
         {%- if first_media -%}
           {{ first_media | image_url: width: 1400 | image_tag: data-gallery-main: '', loading: 'eager', fetchpriority: 'high', sizes: '(max-width: 900px) 92vw, 50vw', widths: '600, 900, 1200, 1400', alt: first_media.alt }}
+        {%- endif -%}
+        {%- if product.media.size > 1 -%}
+          <button class="pdp__arrow pdp__arrow--prev" type="button" data-gallery-step="-1" aria-label="Previous photo">{% render 'icon', name: 'arrow' %}</button>
+          <button class="pdp__arrow pdp__arrow--next" type="button" data-gallery-step="1" aria-label="Next photo">{% render 'icon', name: 'arrow' %}</button>
         {%- endif -%}
       </div>
       {%- if product.media.size > 1 -%}
@@ -36,14 +40,32 @@
         <input type="hidden" name="id" value="{{ v0.id }}">
         {%- if offers.size > 0 and strap.id and belt.id -%}
           <fieldset class="offer">
-            <legend class="offer__legend">Choose your ritual</legend>
+            <legend class="offer__legend">{{ section.settings.offer_heading | default: 'Bundle and save' }}</legend>
             {%- for block in offers -%}
+              {%- assign o_sq = block.settings.strap_qty | default: 0 -%}
+              {%- assign o_bq = block.settings.belt_qty | default: 0 -%}
+              {%- assign o_img = block.settings.image -%}
+              {%- if o_img == blank -%}
+                {%- if o_sq >= 2 and o_bq >= 1 -%}{%- assign o_img = 'box-flat' -%}{%- elsif o_sq >= 1 and o_bq >= 1 -%}{%- assign o_img = 'set-flat' -%}{%- endif -%}
+              {%- endif -%}
+              {%- assign o_hero = '' -%}
+              {%- if o_img == 'box-flat' -%}{%- assign o_hero = 'box-flat-1200.webp' | asset_url -%}{%- elsif o_img == 'set-flat' -%}{%- assign o_hero = 'set-lifestyle-1200.webp' | asset_url -%}{%- elsif o_img != blank -%}{%- assign o_hero = o_img | append: '-1200.webp' | asset_url -%}{%- endif -%}
               <label class="offer__tile" {{ block.shopify_attributes }}>
-                <input type="radio" name="offer" value="{{ forloop.index0 }}" data-strap-qty="{{ block.settings.strap_qty }}" data-belt-qty="{{ block.settings.belt_qty }}"{% if block.settings.default %} checked{% endif %}>
+                <input type="radio" name="offer" value="{{ forloop.index0 }}" data-strap-qty="{{ o_sq }}" data-belt-qty="{{ o_bq }}"{% if o_hero != blank %} data-hero="{{ o_hero }}"{% endif %}{% if block.settings.default %} checked{% endif %}>
                 <span class="offer__face">
+                  <span class="offer__thumb">
+                    {%- if o_img != blank -%}
+                      <img src="{{ o_img | append: '-700.webp' | asset_url }}" alt="" width="56" height="56" loading="lazy">
+                    {%- elsif o_sq == 0 and belt.featured_image -%}
+                      {{ belt.featured_image | image_url: width: 160 | image_tag: loading: 'lazy', alt: '' }}
+                    {%- elsif strap.featured_image -%}
+                      {{ strap.featured_image | image_url: width: 160 | image_tag: loading: 'lazy', alt: '' }}
+                    {%- endif -%}
+                  </span>
                   <span class="offer__text">
                     <strong>{{ block.settings.label }}</strong>
                     <small>{{ block.settings.sub }}</small>
+                    <span class="offer__save" data-offer-save hidden></span>
                   </span>
                   <span class="offer__price"><b data-offer-price></b><s data-offer-compare></s></span>
                   {%- if block.settings.badge != blank -%}<span class="offer__badge">{{ block.settings.badge }}</span>{%- endif -%}
@@ -71,9 +93,11 @@
         <button class="btn btn--primary btn--block pdp__add" type="submit" data-pdp-add{% unless product.available %} disabled{% endunless %}>
           <span class="btn__label">{% if product.available %}Add to cart{% else %}Sold out{% endif %}</span>
         </button>
+        {% render 'protection' %}
       </form>
 
-      <p class="pdp__eta">{% render 'icon', name: 'package' %}<span>Order today, estimated delivery <strong data-eta>{{ settings.delivery_text }}</strong>.</span></p>
+      {% render 'stock-line', available: product.available %}
+      {% render 'pay-icons' %}
 
       <ul class="assure">
         <li>{% render 'icon', name: 'truck' %}<span><strong>Free tracked shipping</strong> across the US</span></li>
@@ -107,7 +131,8 @@
 {
   "name": "Product",
   "settings": [
-    { "type": "textarea", "id": "intro", "label": "Intro line" }
+    { "type": "textarea", "id": "intro", "label": "Intro line" },
+    { "type": "text", "id": "offer_heading", "label": "Offer picker heading", "default": "Bundle and save" }
   ],
   "blocks": [
     { "type": "benefit", "name": "Benefit", "settings": [ { "type": "text", "id": "text", "label": "Text" } ] },
@@ -117,6 +142,7 @@
       { "type": "text", "id": "badge", "label": "Badge" },
       { "type": "number", "id": "strap_qty", "label": "Straps", "default": 1 },
       { "type": "number", "id": "belt_qty", "label": "Belts", "default": 0 },
+      { "type": "text", "id": "image", "label": "Image asset (base name, optional)" },
       { "type": "checkbox", "id": "default", "label": "Selected by default", "default": false }
     ] }
   ]

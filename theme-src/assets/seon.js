@@ -127,25 +127,69 @@
     return '<div class="cart-empty"><h3>Your cart is empty</h3><p>Start your evening ritual.</p></div>' + (cards ? '<div class="upsell">' + cards + '</div>' : '');
   }
 
+  var P = S.protection;
+  function isProtection(i) { return !!(P && (i.variant_id === P.variant || i.handle === P.handle)); }
+  function protectionLine(cart) { return P ? cart.items.find(isProtection) : null; }
+
+  // Ritual savings tracker: strap or belt -> Seon Set -> Ritual Box.
+  function trackerHTML(cart) {
+    if (!strap || !belt || !D) return '';
+    var sq = countOf(cart, strap.handle), bq = countOf(cart, belt.handle);
+    if (!sq && !bq) return '';
+    var step = (sq >= 2 && bq >= 1) ? 3 : (sq >= 1 && bq >= 1) ? 2 : 1;
+    var msg = step === 3 ? 'Ritual Box unlocked. You save ' + money(D * 2) + '.'
+      : step === 2 ? 'Seon Set unlocked. Add a second strap to save ' + money(D) + ' more.'
+      : sq ? 'Add the posture belt to unlock the Seon Set and save ' + money(D) + '.'
+      : 'Add a V-line strap to unlock the Seon Set and save ' + money(D) + '.';
+    var steps = [['Your pick', ''], ['Seon Set', '&minus;' + money(D)], ['Ritual Box', '&minus;' + money(D * 2)]];
+    return '<div class="tracker" data-step="' + step + '"><p class="tracker__msg">' + msg + '</p>' +
+      '<div class="tracker__bar" role="progressbar" aria-label="Bundle savings" aria-valuemin="1" aria-valuemax="3" aria-valuenow="' + step + '"><span style="--p:' + ((step - 1) / 2) + '"></span></div>' +
+      '<ol class="tracker__steps">' + steps.map(function (st, i) {
+        return '<li class="' + (i < step ? 'is-done' : '') + '"><span class="tracker__dot">' + (i < step ? '&#10003;' : (i + 1)) + '</span><b>' + st[0] + '</b>' + (st[1] ? '<small>' + st[1] + '</small>' : '') + '</li>';
+      }).join('') + '</ol></div>';
+  }
+
+  function protectRowHTML(cart) {
+    if (!P) return '';
+    var on = !!protectionLine(cart);
+    return '<label class="protect protect--cart"><span class="protect__icon">' + shieldSVG + '</span>' +
+      '<span class="protect__text"><strong>Shipping protection <span>' + money(P.price) + '</span></strong><small>Reship or refund if your parcel is lost, stolen or damaged.</small></span>' +
+      '<input class="protect__input" type="checkbox" role="switch" data-protect-cart' + (on ? ' checked' : '') + '><span class="protect__switch" aria-hidden="true"></span></label>';
+  }
+  var shieldTpl = document.querySelector('[data-shield-tpl]');
+  var shieldSVG = shieldTpl ? shieldTpl.innerHTML : '';
+
   function render(cart, target, footTarget) {
     current = cart;
-    setCount(cart.item_count);
+    var goods = cart.items.filter(function (i) { return !isProtection(i); });
+    var goodsCount = goods.reduce(function (n, i) { return n + i.quantity; }, 0);
+    setCount(goodsCount);
+    var extra = $('[data-drawer-extra]');
+    if (extra) extra.hidden = !goodsCount;
     if (!target) return;
-    if (!cart.item_count) { target.innerHTML = emptyHTML(); if (footTarget) footTarget.innerHTML = ''; return; }
-    target.innerHTML = '<ul>' + cart.items.map(lineHTML).join('') + '</ul>' + upsellHTML(cart);
+    if (!goodsCount) { target.innerHTML = emptyHTML(); if (footTarget) footTarget.innerHTML = ''; return; }
+    target.innerHTML = trackerHTML(cart) + '<ul>' + goods.map(lineHTML).join('') + '</ul>' + upsellHTML(cart) + protectRowHTML(cart);
     var savings = cart.original_total_price - cart.total_price;
+    var pl = protectionLine(cart);
     var html = '<dl class="totals">' +
-      '<div class="totals__row"><dt>Subtotal</dt><dd>' + money(cart.original_total_price) + '</dd></div>' +
-      (savings > 0 ? '<div class="totals__row totals__row--save"><dt>Bundle savings</dt><dd>&minus;' + money(savings) + '</dd></div>' : '') +
-      '<div class="totals__row"><dt>Shipping</dt><dd>Free</dd></div>' +
-      '<div class="totals__row totals__row--total"><dt>Total</dt><dd>' + money(cart.total_price) + '</dd></div></dl>' +
-      '<a class="btn btn--primary btn--block" href="' + esc(cartUrl('/checkout')) + '">Checkout</a>' +
-      '<p class="drawer__secure">Secure checkout. Card, Apple Pay, Google Pay or PayPal.</p>';
+      (savings > 0 ? '<div class="totals__row"><dt>Subtotal</dt><dd>' + money(cart.original_total_price - (pl ? pl.original_line_price : 0)) + '</dd></div>' +
+        '<div class="totals__row totals__row--save"><dt>Bundle savings</dt><dd>&minus;' + money(savings) + '</dd></div>' : '') +
+      (pl ? '<div class="totals__row"><dt>Shipping protection</dt><dd>' + money(pl.final_line_price) + '</dd></div>' : '') +
+      '<div class="totals__row totals__row--total"><dt>Total <small>Free shipping</small></dt><dd>' + money(cart.total_price) + '</dd></div></dl>' +
+      '<a class="btn btn--primary btn--block" href="' + esc(cartUrl('/checkout')) + '">Checkout securely</a>';
     if (footTarget) footTarget.innerHTML = html; else target.insertAdjacentHTML('beforeend', html);
   }
 
+  // Protection on its own makes no sense: drop it when the last product leaves the cart.
+  function tidy(cart) {
+    var pl = protectionLine(cart);
+    if (pl && cart.items.every(isProtection)) return changeLine(pl.key, 0);
+    if (pl && pl.quantity > 1) return changeLine(pl.key, 1);
+    return Promise.resolve(cart);
+  }
+
   function refresh() {
-    return getCart().then(function (c) {
+    return getCart().then(tidy).then(function (c) {
       render(c, body, foot);
       var page = $('[data-cart-page]');
       if (page) render(c, page, null);
@@ -187,14 +231,31 @@
     body.prepend(p); setTimeout(function () { p.remove(); }, 5000);
   }
 
+  // Adds the items, plus shipping protection when its switch near the button is on.
   function addAndOpen(items, btn) {
-    return withLoading(btn, addItems(items).then(function () {
+    var scope = btn && btn.closest('[data-pdp], [data-bundle], [data-card]');
+    var sw = scope && $('[data-protect-input]', scope);
+    var wantProtection = !!(P && sw && sw.checked);
+    var pre = wantProtection ? getCart() : Promise.resolve(null);
+    return withLoading(btn, pre.then(function (c) {
+      if (wantProtection && !(c && protectionLine(c))) items = items.concat([{ id: P.variant, quantity: 1 }]);
+      return addItems(items);
+    }).then(function () {
       if (btn) { var l = $('.btn__label', btn) || btn; var old = l.textContent; btn.classList.add('is-done'); l.textContent = 'Added'; setTimeout(function () { btn.classList.remove('is-done'); l.textContent = old; }, 1400); }
       announce('Added to cart');
+      if (S.atc === 'checkout' && !document.body.classList.contains('template-cart')) { window.location.href = cartUrl('/checkout'); return; }
       if (document.body.classList.contains('template-cart')) return refresh();
       openDrawer();
     }));
   }
+
+  // Shipping protection switch inside the cart.
+  document.addEventListener('change', function (e) {
+    if (!e.target.matches('[data-protect-cart]') || !P || !current) return;
+    var on = e.target.checked, pl = protectionLine(current);
+    var job = on ? (pl ? Promise.resolve() : addItems([{ id: P.variant, quantity: 1 }])) : (pl ? changeLine(pl.key, 0) : Promise.resolve());
+    withLoading(e.target.closest('.protect'), job.then(refresh));
+  });
 
   document.addEventListener('click', function (e) {
     var t = e.target;
@@ -207,8 +268,8 @@
       var key = line.getAttribute('data-key');
       var item = current.items.find(function (i) { return i.key === key; });
       var q = t.closest('[data-qty]');
-      if (q && item) { withLoading(line, changeLine(key, Math.min(10, Math.max(0, item.quantity + (+q.getAttribute('data-qty'))))).then(function (c) { render(c, body, foot); var pg = $('[data-cart-page]'); if (pg) render(c, pg, null); })); return; }
-      if (t.closest('[data-remove]')) { withLoading(line, changeLine(key, 0).then(function (c) { render(c, body, foot); var pg = $('[data-cart-page]'); if (pg) render(c, pg, null); announce('Removed from cart'); })); return; }
+      if (q && item) { withLoading(line, changeLine(key, Math.min(10, Math.max(0, item.quantity + (+q.getAttribute('data-qty'))))).then(tidy).then(function (c) { render(c, body, foot); var pg = $('[data-cart-page]'); if (pg) render(c, pg, null); })); return; }
+      if (t.closest('[data-remove]')) { withLoading(line, changeLine(key, 0).then(tidy).then(function (c) { render(c, body, foot); var pg = $('[data-cart-page]'); if (pg) render(c, pg, null); announce('Removed from cart'); })); return; }
     }
 
     var size = t.closest('[data-upsell-size]');
@@ -272,23 +333,130 @@
     }
   });
 
+  /* ---------- announcement rotator ---------- */
+  var ann = $$('.announce__item');
+  if (ann.length > 1 && !reduceMotion) {
+    var ai = 0;
+    setInterval(function () {
+      if (document.hidden) return;
+      ann[ai].classList.remove('is-active'); ann[ai].setAttribute('aria-hidden', 'true');
+      ai = (ai + 1) % ann.length;
+      ann[ai].classList.add('is-active'); ann[ai].removeAttribute('aria-hidden');
+    }, 4200);
+  }
+
+  /* ---------- mobile menu ---------- */
+  var menu = $('[data-menu]');
+  var menuPanel = menu && $('.menu__panel', menu);
+  var menuOpen = false, menuLast = null, menuTimer = 0;
+  function openMenu() {
+    if (!menu || menuOpen) return;
+    menuOpen = true; clearTimeout(menuTimer); menuLast = document.activeElement;
+    menu.hidden = false; void menu.offsetWidth; menu.classList.add('is-open');
+    document.body.classList.add('is-locked');
+    inertTargets().forEach(function (el) { el.setAttribute('inert', ''); });
+    menuPanel.focus({ preventScroll: true });
+  }
+  function closeMenu() {
+    if (!menu || !menuOpen) return;
+    menuOpen = false; menu.classList.remove('is-open');
+    inertTargets().forEach(function (el) { el.removeAttribute('inert'); });
+    document.body.classList.remove('is-locked');
+    menuTimer = setTimeout(function () { menu.hidden = true; }, 320);
+    if (menuLast && menuLast.focus && document.contains(menuLast)) menuLast.focus({ preventScroll: true });
+  }
+  document.addEventListener('click', function (e) {
+    if (e.target.closest('[data-menu-open]')) { e.preventDefault(); openMenu(); return; }
+    if (e.target.closest('[data-menu-close]')) closeMenu();
+  });
+  document.addEventListener('keydown', function (e) {
+    if (!menuOpen) return;
+    if (e.key === 'Escape') { e.preventDefault(); closeMenu(); return; }
+    if (e.key === 'Tab') {
+      var f = $$('a[href], button:not([disabled])', menuPanel);
+      if (!f.length) return;
+      var first = f[0], last = f[f.length - 1];
+      if (e.shiftKey && (document.activeElement === first || document.activeElement === menuPanel)) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    }
+  });
+  window.matchMedia('(min-width: 761px)').addEventListener('change', function (m) { if (m.matches) closeMenu(); });
+
+  /* ---------- photo swaps (product cards, galleries, offer tiles) ---------- */
+  function swapImg(img, src, alt) {
+    if (!img || !src || img.getAttribute('src') === src) return;
+    img.classList.add('is-swapping');
+    var pre = new Image();
+    pre.onload = pre.onerror = function () {
+      setTimeout(function () {
+        img.removeAttribute('srcset'); img.src = src; if (alt != null) img.alt = alt;
+        requestAnimationFrame(function () { img.classList.remove('is-swapping'); });
+      }, 90);
+    };
+    pre.src = src;
+  }
+  document.addEventListener('click', function (e) {
+    var th = e.target.closest('[data-card-thumb]');
+    if (!th) return;
+    var card = th.closest('[data-card]');
+    swapImg(card && $('[data-main]', card), th.getAttribute('data-src'), th.getAttribute('data-alt'));
+    $$('[data-card-thumb]', card).forEach(function (b) { b.setAttribute('aria-current', b === th ? 'true' : 'false'); });
+  });
+  $$('[data-gallery]').forEach(function (g) {
+    var main = $('[data-gallery-main]', g) || $('.pdp__main img', g);
+    if (main) main.setAttribute('data-orig', main.getAttribute('src'));
+    $$('[data-thumb]', g).forEach(function (b) {
+      b.addEventListener('click', function () {
+        $$('[data-thumb]', g).forEach(function (x) { x.setAttribute('aria-current', x === b ? 'true' : 'false'); });
+        swapImg(main, b.getAttribute('data-src'), b.getAttribute('data-alt'));
+      });
+    });
+  });
+
+  // Arrows and swipe step through the thumbnails.
+  function stepGallery(g, dir) {
+    var thumbs = $$('[data-thumb]', g);
+    if (thumbs.length < 2) return;
+    var i = thumbs.findIndex(function (x) { return x.getAttribute('aria-current') === 'true'; });
+    thumbs[(Math.max(0, i) + dir + thumbs.length) % thumbs.length].click();
+  }
+  $$('[data-gallery]').forEach(function (g) {
+    $$('[data-gallery-step]', g).forEach(function (b) { b.addEventListener('click', function () { stepGallery(g, +b.getAttribute('data-gallery-step')); }); });
+    var sw = $('[data-swipe]', g);
+    if (!sw) return;
+    var x0 = null, y0 = 0;
+    sw.addEventListener('touchstart', function (e) { x0 = e.touches[0].clientX; y0 = e.touches[0].clientY; }, { passive: true });
+    sw.addEventListener('touchend', function (e) {
+      if (x0 === null) return;
+      var dx = e.changedTouches[0].clientX - x0, dy = e.changedTouches[0].clientY - y0;
+      if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy) * 1.2) stepGallery(g, dx < 0 ? 1 : -1);
+      x0 = null;
+    }, { passive: true });
+  });
+
+  /* ---------- sticky buy bar + delivery estimate (product and bundle pages) ---------- */
+  $$('[data-buybar]').forEach(function (bar) {
+    var scope = bar.closest('[data-pdp], [data-bundle]') || document;
+    var mainBtn = $('[data-pdp-add], [data-main-add]', scope);
+    if (!mainBtn || !('IntersectionObserver' in window)) return;
+    bar.hidden = false;
+    new IntersectionObserver(function (en) {
+      bar.classList.toggle('is-in', !en[0].isIntersecting && en[0].boundingClientRect.top < 0);
+    }).observe(mainBtn);
+  });
+  if (S.delivery) {
+    var addBiz = function (d, n) { d = new Date(d); while (n > 0) { d.setDate(d.getDate() + 1); var w = d.getDay(); if (w !== 0 && w !== 6) n--; } return d; };
+    var fmtDay = new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric' });
+    var today = new Date();
+    $$('[data-eta]').forEach(function (el) { el.textContent = fmtDay.format(addBiz(today, S.delivery.min)) + ' to ' + fmtDay.format(addBiz(today, S.delivery.max)); });
+  }
+
   if ($('[data-cart-page]')) refresh();
 
   /* ---------- product page ---------- */
   var pdp = $('[data-pdp]');
   if (pdp) {
     var mainImg = $('[data-gallery-main]', pdp) || $('.pdp__main img', pdp);
-    $$('[data-thumb]', pdp).forEach(function (b) {
-      b.addEventListener('click', function () {
-        $$('[data-thumb]', pdp).forEach(function (x) { x.setAttribute('aria-current', x === b ? 'true' : 'false'); });
-        if (!mainImg) return;
-        mainImg.classList.add('is-swapping');
-        var src = b.getAttribute('data-src');
-        var pre = new Image();
-        pre.onload = pre.onerror = function () { setTimeout(function () { mainImg.removeAttribute('srcset'); mainImg.src = src; mainImg.alt = b.getAttribute('data-alt') || ''; requestAnimationFrame(function () { mainImg.classList.remove('is-swapping'); }); }, 100); };
-        pre.src = src;
-      });
-    });
 
     var handle = pdp.getAttribute('data-handle');
     var form = $('[data-pdp-form]', pdp);
@@ -302,6 +470,8 @@
       var face = t.nextElementSibling;
       $('[data-offer-price]', face).textContent = money(b.now);
       $('[data-offer-compare]', face).textContent = b.save ? money(b.full) : '';
+      var sv = $('[data-offer-save]', face);
+      if (sv && b.save) { sv.textContent = 'You save ' + money(b.save); sv.hidden = false; }
     });
 
     function selection() {
@@ -330,7 +500,14 @@
         if (barLabel && s.label) barLabel.textContent = s.label;
       }
     }
-    pdp.addEventListener('change', function (e) { if (e.target.name === 'offer' || e.target.name === 'belt-size') syncPdp(); });
+    pdp.addEventListener('change', function (e) {
+      if (e.target.name === 'offer') {
+        var hero = e.target.getAttribute('data-hero');
+        swapImg(mainImg, hero || (mainImg && mainImg.getAttribute('data-orig')));
+        if (!hero) $$('[data-thumb]', pdp).forEach(function (x, i) { x.setAttribute('aria-current', i === 0 ? 'true' : 'false'); });
+      }
+      if (e.target.name === 'offer' || e.target.name === 'belt-size') syncPdp();
+    });
     syncPdp();
 
     var addBtn = $('[data-pdp-add]', pdp);
@@ -338,23 +515,6 @@
     var barBtn = $('[data-buybar-add]', pdp);
     if (barBtn) barBtn.addEventListener('click', function () { addAndOpen(selection().items, barBtn); });
 
-    // Sticky bar appears once the main button scrolls away.
-    var bar = $('[data-buybar]', pdp);
-    if (bar && addBtn && 'IntersectionObserver' in window) {
-      bar.hidden = false;
-      new IntersectionObserver(function (en) {
-        bar.classList.toggle('is-in', !en[0].isIntersecting && en[0].boundingClientRect.top < 0);
-      }).observe(addBtn);
-    }
-
-    // Delivery estimate in business days.
-    var eta = $('[data-eta]', pdp);
-    if (eta && S.delivery) {
-      var addBiz = function (d, n) { d = new Date(d); while (n > 0) { d.setDate(d.getDate() + 1); var w = d.getDay(); if (w !== 0 && w !== 6) n--; } return d; };
-      var f = new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric' });
-      var now = new Date();
-      eta.textContent = f.format(addBiz(now, S.delivery.min)) + ' to ' + f.format(addBiz(now, S.delivery.max));
-    }
   }
 
   /* ---------- accordions ---------- */
@@ -383,6 +543,11 @@
     stepImgs.forEach(function (s) { s.classList.toggle('is-active', +s.getAttribute('data-step-img') === i); });
   }
   function ready() { requestAnimationFrame(function () { root.classList.add('is-ready'); }); }
+  if (header) {
+    var solid = function () { header.classList.toggle('is-solid', window.scrollY > 8); };
+    window.addEventListener('scroll', solid, { passive: true });
+    solid();
+  }
 
   var hasGsap = !!(window.gsap && window.ScrollTrigger) && !reduceMotion;
   if (!hasGsap) {
@@ -402,7 +567,15 @@
     new MutationObserver(function () { if (document.body.classList.contains('is-locked')) lenis.stop(); else lenis.start(); })
       .observe(document.body, { attributes: true, attributeFilter: ['class'] });
   }
-  if (header) ScrollTrigger.create({ start: 40, end: 'max', onToggle: function (self) { header.classList.toggle('is-solid', self.isActive); } });
+  // Sections fade up as they enter, a few at a time.
+  var reveals = $$('[data-reveal]');
+  if (reveals.length) {
+    gsap.set(reveals, { autoAlpha: 0, y: 26 });
+    ScrollTrigger.batch(reveals, {
+      start: 'top 90%', once: true,
+      onEnter: function (els) { gsap.to(els, { autoAlpha: 1, y: 0, duration: 0.9, ease: 'power3.out', stagger: 0.08, overwrite: true, clearProps: 'transform,opacity,visibility' }); }
+    });
+  }
   if ($('[data-hero-media] img')) {
     gsap.to('[data-hero-media] img', { scale: 1.08, yPercent: 6, ease: 'none', scrollTrigger: { trigger: '[data-hero]', start: 'top top', end: 'bottom top', scrub: true } });
   }

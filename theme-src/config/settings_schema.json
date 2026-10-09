@@ -2,7 +2,7 @@
   {
     "name": "theme_info",
     "theme_name": "Seon",
-    "theme_version": "1.0.0",
+    "theme_version": "2.0.0",
     "theme_author": "Seon",
     "theme_documentation_url": "https://help.shopify.com",
     "theme_support_url": "https://help.shopify.com"
@@ -10,18 +10,116 @@
   {
     "name": "Bundles",
     "settings": [
-      { "type": "text", "id": "strap_handle", "label": "Strap product handle", "default": "v-line-lifting-strap" },
-      { "type": "text", "id": "belt_handle", "label": "Belt product handle", "default": "posture-belt" },
-      { "type": "text", "id": "bundle_discount", "label": "Discount per strap when a belt is in the cart", "default": "9.99", "info": "Must match the automatic discount in Shopify admin." }
+      {
+        "type": "text",
+        "id": "strap_handle",
+        "label": "Strap product handle",
+        "default": "v-line-lifting-strap"
+      },
+      {
+        "type": "text",
+        "id": "belt_handle",
+        "label": "Belt product handle",
+        "default": "posture-belt"
+      },
+      {
+        "type": "text",
+        "id": "bundle_discount",
+        "label": "Discount per strap when a belt is in the cart",
+        "default": "9.99",
+        "info": "Must match the automatic discount in Shopify admin."
+      }
     ]
   },
   {
     "name": "Store",
     "settings": [
-      { "type": "text", "id": "delivery_text", "label": "Delivery time", "default": "7 to 12 business days" },
-      { "type": "number", "id": "delivery_min", "label": "Delivery min (business days)", "default": 7 },
-      { "type": "number", "id": "delivery_max", "label": "Delivery max (business days)", "default": 12 },
-      { "type": "number", "id": "return_days", "label": "Return window (days)", "default": 30 }
+      {
+        "type": "text",
+        "id": "delivery_text",
+        "label": "Delivery time",
+        "default": "7 to 12 business days"
+      },
+      {
+        "type": "number",
+        "id": "delivery_min",
+        "label": "Delivery min (business days)",
+        "default": 7
+      },
+      {
+        "type": "number",
+        "id": "delivery_max",
+        "label": "Delivery max (business days)",
+        "default": 12
+      },
+      {
+        "type": "number",
+        "id": "return_days",
+        "label": "Return window (days)",
+        "default": 30
+      }
+    ]
+  },
+  {
+    "name": "Cart and upsells",
+    "settings": [
+      {
+        "type": "select",
+        "id": "atc_behavior",
+        "label": "After add to cart",
+        "options": [
+          {
+            "value": "drawer",
+            "label": "Open the cart drawer (shows upsells)"
+          },
+          {
+            "value": "checkout",
+            "label": "Go straight to checkout"
+          }
+        ],
+        "default": "drawer"
+      },
+      {
+        "type": "checkbox",
+        "id": "protection_enabled",
+        "label": "Offer shipping protection",
+        "default": true
+      },
+      {
+        "type": "text",
+        "id": "protection_handle",
+        "label": "Shipping protection product handle",
+        "default": "shipping-protection"
+      },
+      {
+        "type": "checkbox",
+        "id": "protection_default",
+        "label": "Shipping protection switched on by default",
+        "default": false
+      }
+    ]
+  },
+  {
+    "name": "Announcement",
+    "settings": [
+      {
+        "type": "text",
+        "id": "announce_1",
+        "label": "Message 1",
+        "default": "Free tracked shipping across the US"
+      },
+      {
+        "type": "text",
+        "id": "announce_2",
+        "label": "Message 2",
+        "default": "Pair the strap and belt, save $9.99"
+      },
+      {
+        "type": "text",
+        "id": "announce_3",
+        "label": "Message 3",
+        "default": "30-day returns on unused items"
+      }
     ]
   }
 ]

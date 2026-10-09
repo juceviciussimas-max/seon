@@ -6,7 +6,7 @@
     </form>
     {%- if search.performed -%}
       <div class="shop2__grid">
-        {%- for item in search.results -%}{%- if item.object_type == 'product' -%}{% render 'product-card', product: item %}{%- endif -%}{%- else -%}<p>Nothing found for "{{ search.terms | escape }}".</p>{%- endfor -%}
+        {%- for item in search.results -%}{%- if item.object_type == 'product' and item.handle != settings.protection_handle -%}{% render 'product-card', product: item %}{%- endif -%}{%- else -%}<p>Nothing found for "{{ search.terms | escape }}".</p>{%- endfor -%}
       </div>
     {%- endif -%}
   </div>

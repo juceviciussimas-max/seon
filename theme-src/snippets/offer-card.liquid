@@ -1,6 +1,7 @@
 {%- comment -%}
   Bundle offer. Adds the real strap and belt variants together; the automatic discount
   in Shopify admin brings the cart to the bundle price, so CJ can ship each item as usual.
+  image: base name of a theme asset with -700.webp and -1200.webp sizes.
 {%- endcomment -%}
 {%- assign strap = all_products[settings.strap_handle] -%}
 {%- assign belt = all_products[settings.belt_handle] -%}
@@ -10,13 +11,14 @@
   {%- assign full = strap.price | times: strap_qty | plus: belt.price -%}
   {%- assign save = disc_each | times: disc_qty -%}
   {%- assign now = full | minus: save -%}
-  <article class="pcard pcard--wide{% if flip %} pcard--flip{% endif %}" data-card data-offer="{{ kind }}" data-strap-qty="{{ strap_qty }}" data-belt-qty="{{ belt_qty }}">
-    <div class="pcard__media">
-      <img class="pcard__img" src="{{ image | asset_url }}" alt="" loading="lazy" width="1200" height="1200">
-    </div>
+  {%- assign uid = kind | append: '-' | append: section.id -%}
+  <article class="pcard pcard--offer{% if wide %} pcard--wide{% endif %}{% if flip %} pcard--flip{% endif %}" data-card data-reveal data-offer="{{ kind }}" data-strap-qty="{{ strap_qty }}" data-belt-qty="{{ belt_qty }}">
+    <a class="pcard__media" href="{{ url | default: '#' }}" aria-label="{{ title | escape }}, see what's inside" tabindex="-1">
+      <img class="pcard__img" src="{{ image | append: '-1200.webp' | asset_url }}" srcset="{{ image | append: '-700.webp' | asset_url }} 700w, {{ image | append: '-1200.webp' | asset_url }} 1200w" sizes="{% if wide %}(max-width: 860px) 92vw, 50vw{% else %}(max-width: 860px) 92vw, 45vw{% endif %}" alt="{{ alt | default: title | escape }}" loading="lazy" width="1200" height="1200">
+      {%- if tag != blank -%}<span class="pcard__flag">{{ tag }}</span>{%- endif -%}
+    </a>
     <div class="pcard__body">
-      <p class="pcard__tag">{{ tag }}</p>
-      <h3 class="pcard__name">{{ title }}</h3>
+      <h3 class="pcard__name"><a href="{{ url | default: '#' }}">{{ title }}</a></h3>
       <p class="pcard__short">{{ text }}</p>
       <ul class="pcard__inside">
         <li>{{ strap_qty }} × {{ strap.title }}</li>
@@ -27,12 +29,12 @@
         <legend>Belt size <span data-size-name>{{ belt.variants[1].title | default: belt.variants[0].title }}</span></legend>
         <div class="opt__row">
           {%- for v in belt.variants -%}
-            <label class="chip chip--sm"><input type="radio" name="offer-{{ kind }}-{{ section.id }}" value="{{ v.id }}" data-title="{{ v.title | escape }}"{% if forloop.index == 2 %} checked{% endif %}{% unless v.available %} disabled{% endunless %}><span class="chip__face">{{ v.title }}</span></label>
+            <label class="chip chip--sm"><input type="radio" name="offer-{{ uid }}" value="{{ v.id }}" data-title="{{ v.title | escape }}"{% if forloop.index == 2 %} checked{% endif %}{% unless v.available %} disabled{% endunless %}><span class="chip__face">{{ v.title }}</span></label>
           {%- endfor -%}
         </div>
       </fieldset>
-      <button class="btn btn--primary pcard__add" type="button" data-offer-add><span class="btn__label">Add the {{ title | remove: 'The ' }}</span></button>
-      <p class="pcard__ship">Free tracked US shipping. Discount applied automatically in your cart.</p>
+      <button class="btn btn--primary pcard__add" type="button" data-offer-add><span class="btn__label">Add the {{ title | remove: 'The ' }}, {{ now | money }}</span></button>
+      {%- if url != blank -%}<a class="pcard__more" href="{{ url }}">See what's inside</a>{%- endif -%}
     </div>
   </article>
 {%- endif -%}

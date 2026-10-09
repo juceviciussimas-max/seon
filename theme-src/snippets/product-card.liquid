@@ -1,11 +1,20 @@
-{%- comment -%} Product card with one-tap add. Sizes show as pills when a product has several variants. {%- endcomment -%}
+{%- comment -%} Product card with photo thumbnails and one-tap add. Sizes show as pills when a product has several variants. {%- endcomment -%}
 {%- assign v0 = product.selected_or_first_available_variant -%}
-<article class="pcard" data-card>
-  <a class="pcard__media" href="{{ product.url }}" aria-label="{{ product.title | escape }}">
-    {%- if product.featured_image -%}
-      {{ product.featured_image | image_url: width: 900 | image_tag: class: 'pcard__img', loading: 'lazy', sizes: '(max-width: 860px) 92vw, 45vw', widths: '400, 600, 900', alt: product.featured_image.alt }}
+<article class="pcard" data-card data-reveal>
+  <div class="pcard__media">
+    <a class="pcard__link" href="{{ product.url }}" aria-label="{{ product.title | escape }}" tabindex="-1">
+      {%- if product.featured_image -%}
+        {{ product.featured_image | image_url: width: 900 | image_tag: class: 'pcard__img', data-main: '', loading: 'lazy', sizes: '(max-width: 860px) 92vw, 45vw', widths: '400, 600, 900', alt: product.featured_image.alt }}
+      {%- endif -%}
+    </a>
+    {%- if product.images.size > 1 -%}
+      <div class="pcard__thumbs" aria-label="{{ product.title | escape }} photos">
+        {%- for image in product.images limit: 4 -%}
+          <button class="pcard__thumb" type="button" data-card-thumb data-src="{{ image | image_url: width: 900 }}" data-alt="{{ image.alt | escape }}"{% if forloop.first %} aria-current="true"{% endif %} aria-label="Show photo {{ forloop.index }}">{{ image | image_url: width: 120 | image_tag: loading: 'lazy', alt: '' }}</button>
+        {%- endfor -%}
+      </div>
     {%- endif -%}
-  </a>
+  </div>
   <div class="pcard__body">
     <h3 class="pcard__name"><a href="{{ product.url }}">{{ product.title }}</a></h3>
     <p class="pcard__short">{{ product.description | strip_html | truncatewords: 18 }}</p>

@@ -1,12 +1,61 @@
-<section class="section shop2 shop2--page">
+{%- assign strap = all_products[settings.strap_handle] -%}
+{%- assign belt = all_products[settings.belt_handle] -%}
+{%- assign disc_each = settings.bundle_discount | default: '9.99' | times: 100 | round -%}
+<section class="shop-page">
   <div class="container">
-    <h1 class="section__title">{{ collection.title }}</h1>
-    {%- if collection.description != blank -%}<div class="page-lead rte">{{ collection.description }}</div>{%- endif -%}
-    {%- paginate collection.products by 24 -%}
-      <div class="shop2__grid">
-        {%- for product in collection.products -%}{% render 'product-card', product: product %}{%- else -%}<p>No products here yet.</p>{%- endfor -%}
+    <header class="shop-page__head">
+      <h1 class="shop-page__title">{% if collection.handle == 'all' or collection.handle == blank %}{{ section.settings.heading }}{% else %}{{ collection.title }}{% endif %}</h1>
+      {%- if collection.description != blank and collection.handle != 'all' -%}
+        <div class="lead rte">{{ collection.description }}</div>
+      {%- else -%}
+        <p class="lead">{{ section.settings.text }}</p>
+      {%- endif -%}
+      <ul class="trust-row">
+        <li>{% render 'icon', name: 'truck' %}<span>Free tracked US shipping</span></li>
+        <li>{% render 'icon', name: 'return' %}<span>{{ settings.return_days }}-day returns</span></li>
+        <li>{% render 'icon', name: 'gift' %}<span>Set savings applied in your cart</span></li>
+      </ul>
+    </header>
+
+    {%- if section.settings.show_sets and strap.id and belt.id -%}
+      <div class="shop-page__group">
+        <div class="shop-page__grouphead">
+          <h2>Sets</h2>
+          <p>Pair the strap with the belt and each strap is {{ disc_each | money }} less.</p>
+        </div>
+        <div class="shop2__grid">
+          {% render 'offer-card', kind: 'set', tag: 'Most popular', title: 'The Seon Set', text: 'The strap and the belt together, for your face and your shoulders.', strap_qty: 1, belt_qty: 1, image: 'set-lifestyle', alt: 'A woman wearing the pink V-line strap and the white posture belt', url: section.settings.set_url %}
+          {% render 'offer-card', kind: 'box', tag: 'Best value', title: 'The Ritual Box', text: 'Two straps and one belt. One strap for you, one to share or keep for travel.', strap_qty: 2, belt_qty: 1, image: 'box-flat', alt: 'Two pink V-line straps and one white posture belt laid out together', url: section.settings.box_url %}
+        </div>
       </div>
-    {%- endpaginate -%}
+    {%- endif -%}
+
+    <div class="shop-page__group">
+      <div class="shop-page__grouphead">
+        <h2>{% if section.settings.show_sets %}On their own{% else %}The collection{% endif %}</h2>
+      </div>
+      {%- paginate collection.products by 24 -%}
+        <div class="shop2__grid">
+          {%- for product in collection.products -%}
+            {%- if product.handle == settings.protection_handle -%}{%- continue -%}{%- endif -%}
+            {% render 'product-card', product: product %}
+          {%- else -%}
+            <p>No products here yet.</p>
+          {%- endfor -%}
+        </div>
+      {%- endpaginate -%}
+    </div>
   </div>
 </section>
-{% schema %}{ "name": "Collection" }{% endschema %}
+{% schema %}
+{
+  "name": "Collection",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading for the all products page", "default": "Shop the ritual" },
+    { "type": "textarea", "id": "text", "label": "Intro", "default": "Two pieces for ten quiet minutes a day. Choose one, or pair them and save." },
+    { "type": "checkbox", "id": "show_sets", "label": "Show the sets first", "default": true },
+    { "type": "text", "id": "set_url", "label": "Seon Set page link", "default": "/pages/seon-set" },
+    { "type": "text", "id": "box_url", "label": "Ritual Box page link", "default": "/pages/ritual-box" }
+  ]
+}
+{% endschema %}

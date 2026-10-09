@@ -1,0 +1,8 @@
+<p class="stock">
+  <span class="stock__dot{% unless available %} stock__dot--out{% endunless %}" aria-hidden="true"></span>
+  {%- if available -%}
+    <span><strong>In stock.</strong> Order today, arrives <strong data-eta>in {{ settings.delivery_text }}</strong>, free.</span>
+  {%- else -%}
+    <span><strong>Sold out</strong> for now.</span>
+  {%- endif -%}
+</p>

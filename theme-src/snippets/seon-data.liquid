@@ -4,6 +4,7 @@
 {%- endcomment -%}
 {%- assign strap = all_products[settings.strap_handle] -%}
 {%- assign belt = all_products[settings.belt_handle] -%}
+{%- assign protection = all_products[settings.protection_handle] -%}
 <script>
   window.Seon = {
     routes: {
@@ -15,6 +16,8 @@
     moneyFormat: {{ shop.money_format | json }},
     bundleDiscount: {{ settings.bundle_discount | default: '9.99' | times: 100 | round }},
     delivery: { min: {{ settings.delivery_min | default: 7 }}, max: {{ settings.delivery_max | default: 12 }} },
+    atc: {{ settings.atc_behavior | default: 'drawer' | json }},
+    protection: {% if settings.protection_enabled and protection.id and protection.available %}{ handle: {{ protection.handle | json }}, variant: {{ protection.selected_or_first_available_variant.id }}, price: {{ protection.price }} }{% else %}null{% endif %},
     products: {
       strap: {% if strap.id %}{
         id: {{ strap.id }}, handle: {{ strap.handle | json }}, title: {{ strap.title | json }}, url: {{ strap.url | json }},

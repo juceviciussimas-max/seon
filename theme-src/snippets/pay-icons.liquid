@@ -1,0 +1,5 @@
+{%- if shop.enabled_payment_types.size > 0 -%}
+  <ul class="pay-icons" aria-label="Payment methods we accept">
+    {%- for type in shop.enabled_payment_types -%}<li>{{ type | payment_type_svg_tag: class: 'pay-icon' }}</li>{%- endfor -%}
+  </ul>
+{%- endif -%}

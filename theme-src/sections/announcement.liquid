@@ -1,11 +1,30 @@
-<div class="announce">
-  <p>{{ section.settings.text }}</p>
+{%- liquid
+  assign msgs = ''
+  if settings.announce_1 != blank
+    assign msgs = msgs | append: settings.announce_1 | append: '|~|'
+  endif
+  if settings.announce_2 != blank
+    assign msgs = msgs | append: settings.announce_2 | append: '|~|'
+  endif
+  if settings.announce_3 != blank
+    assign msgs = msgs | append: settings.announce_3 | append: '|~|'
+  endif
+  assign list = msgs | split: '|~|'
+-%}
+<div class="announce" data-announce>
+  {%- if list.size > 0 -%}
+    <ul class="announce__list" aria-live="off">
+      {%- for m in list -%}<li class="announce__item{% if forloop.first %} is-active{% endif %}"{% unless forloop.first %} aria-hidden="true"{% endunless %}>{{ m }}</li>{%- endfor -%}
+    </ul>
+  {%- else -%}
+    <p>{{ section.settings.text }}</p>
+  {%- endif -%}
 </div>
 {% schema %}
 {
   "name": "Announcement bar",
   "settings": [
-    { "type": "text", "id": "text", "label": "Text", "default": "Free tracked shipping across the US. 30-day returns." }
+    { "type": "text", "id": "text", "label": "Fallback text", "default": "Free tracked shipping across the US. 30-day returns." }
   ]
 }
 {% endschema %}

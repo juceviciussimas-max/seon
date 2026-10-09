@@ -6,6 +6,10 @@
     "delivery_text": "7 to 12 business days",
     "delivery_min": 7,
     "delivery_max": 12,
-    "return_days": 30
+    "return_days": 30,
+    "atc_behavior": "drawer",
+    "protection_enabled": true,
+    "protection_handle": "shipping-protection",
+    "protection_default": false
   }
 }

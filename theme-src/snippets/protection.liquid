@@ -1,0 +1,10 @@
+{%- comment -%} Optional shipping protection, added with the order when switched on. {%- endcomment -%}
+{%- assign protection = all_products[settings.protection_handle] -%}
+{%- if settings.protection_enabled and protection.id and protection.available -%}
+  <label class="protect">
+    <span class="protect__icon">{% render 'icon', name: 'shield' %}</span>
+    <span class="protect__text"><strong>Shipping protection <span>{{ protection.price | money }}</span></strong><small>We reship or refund if your parcel is lost, stolen or damaged.</small></span>
+    <input class="protect__input" type="checkbox" role="switch" data-protect-input value="{{ protection.selected_or_first_available_variant.id }}"{% if settings.protection_default %} checked{% endif %}>
+    <span class="protect__switch" aria-hidden="true"></span>
+  </label>
+{%- endif -%}

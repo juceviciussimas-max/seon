@@ -8,6 +8,13 @@
     <p class="drawer__ship">{% render 'icon', name: 'truck' %}<span>Free tracked US shipping on every order</span></p>
     <div class="drawer__body" data-drawer-body></div>
     <div class="drawer__foot" data-drawer-foot></div>
+    <div class="drawer__extra" data-drawer-extra hidden>
+      {%- if additional_checkout_buttons -%}
+        <div class="drawer__express">{{ content_for_additional_checkout_buttons }}</div>
+      {%- endif -%}
+      {% render 'pay-icons' %}
+    </div>
   </aside>
 </div>
 <div class="sr-only" aria-live="polite" data-live></div>
+<template data-shield-tpl>{% render 'icon', name: 'shield' %}</template>
