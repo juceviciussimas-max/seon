@@ -148,6 +148,20 @@
             "q": "How do I clean them?",
             "a": "<p>Hand wash in cool water with a little mild soap and let them air dry. Do not tumble dry.</p>"
           }
+        },
+        "q_snug": {
+          "type": "q",
+          "settings": {
+            "q": "How snug should the strap be?",
+            "a": "<p>Snug, never tight. You should still be able to open your mouth and talk comfortably. If it leaves red marks or feels tight, loosen the velcro a little.</p>"
+          }
+        },
+        "q_shape": {
+          "type": "q",
+          "settings": {
+            "q": "Will the strap change my face shape?",
+            "a": "<p>No. It is a comfort and self-care accessory, not a treatment, and it will not change your bone structure. Think of it as your bedtime cue: the last step before lights out.</p>"
+          }
         }
       },
       "block_order": [
@@ -155,6 +169,8 @@
         "q1",
         "q2",
         "q3",
+        "q_snug",
+        "q_shape",
         "q4"
       ]
     },

@@ -129,6 +129,27 @@
             "q": "What if I change my mind?",
             "a": "<p>Return unused items within 30 days of delivery. If something arrives damaged, we replace it or refund you.</p>"
           }
+        },
+        "q_snug": {
+          "type": "q",
+          "settings": {
+            "q": "How snug should the strap be?",
+            "a": "<p>Snug, never tight. You should still be able to open your mouth and talk comfortably. If it leaves red marks or feels tight, loosen the velcro a little.</p>"
+          }
+        },
+        "q_beltfit": {
+          "type": "q",
+          "settings": {
+            "q": "How should the belt fit?",
+            "a": "<p>Firm, never tight. The pad sits flat between your shoulder blades and the loops should not dig into your arms. If they do, loosen the velcro or choose the next size up.</p>"
+          }
+        },
+        "q_shape": {
+          "type": "q",
+          "settings": {
+            "q": "Will the strap change my face shape?",
+            "a": "<p>No. It is a comfort and self-care accessory, not a treatment, and it will not change your bone structure. Think of it as your bedtime cue: the last step before lights out.</p>"
+          }
         }
       },
       "block_order": [
@@ -136,6 +157,9 @@
         "q1",
         "q2",
         "q3",
+        "q_snug",
+        "q_beltfit",
+        "q_shape",
         "q4",
         "q5",
         "q6"

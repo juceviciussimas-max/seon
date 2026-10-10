@@ -148,6 +148,13 @@
             "q": "How do I clean them?",
             "a": "<p>Hand wash in cool water with a little mild soap and let them air dry. Do not tumble dry.</p>"
           }
+        },
+        "q_beltfit": {
+          "type": "q",
+          "settings": {
+            "q": "How should the belt fit?",
+            "a": "<p>Firm, never tight. The pad sits flat between your shoulder blades and the loops should not dig into your arms. If they do, loosen the velcro or choose the next size up.</p>"
+          }
         }
       },
       "block_order": [
@@ -155,6 +162,7 @@
         "q1",
         "q2",
         "q3",
+        "q_beltfit",
         "q4"
       ]
     },
