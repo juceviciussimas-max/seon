@@ -44,7 +44,7 @@
         "type": "textarea",
         "id": "brand_description",
         "label": "Brand description (search and social previews)",
-        "default": "Korean-inspired self-care: a soft V-line lifting strap and a light posture belt. Free tracked US shipping, 30-day returns."
+        "default": "Korean-inspired self-care: a soft V-line strap you wear while you sleep and a light posture belt for your days. Free tracked US shipping, 30-day returns."
       },
       {
         "type": "text",

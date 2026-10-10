@@ -1,0 +1,66 @@
+{%- comment -%}
+  Opening screen: pinned while you scroll; a wipe moves from the "day" photo (belt only)
+  to the "night" photo (strap + belt) of the same model. Both photos show the real products.
+{%- endcomment -%}
+{%- assign strap = all_products[settings.strap_handle] -%}
+{%- assign belt = all_products[settings.belt_handle] -%}
+<section class="reveal" data-hero data-reveal-hero aria-labelledby="reveal-title-{{ section.id }}">
+  <div class="reveal__stage" data-reveal-stage>
+    <div class="container reveal__grid">
+      <div class="reveal__copy">
+        <h1 id="reveal-title-{{ section.id }}" class="s-hero__title reveal__title">
+          <span class="line"><span>{{ section.settings.line1 }}</span></span>
+          <span class="line"><span>{{ section.settings.line2 }}</span></span>
+        </h1>
+        <p class="s-hero__lead reveal__lead">{{ section.settings.text }}</p>
+        <div class="s-hero__cta">
+          <a class="btn btn--accent btn--shine" href="{{ section.settings.button_link }}">{{ section.settings.button_label }}{% render 'icon', name: 'arrow' %}</a>
+          {%- if strap.id and belt.id -%}
+            {%- assign full = strap.price | plus: belt.price -%}
+            {%- assign now = settings.bundle_discount | default: '9.99' | times: 100 | round -%}
+            {%- assign now = full | minus: now -%}
+            <span class="s-hero__price"><strong>{{ now | money }}</strong> <s>{{ full | money }}</s><small>{{ section.settings.price_label }}</small></span>
+          {%- endif -%}
+        </div>
+        <p class="s-hero__note reveal__note">{% render 'icon', name: 'truck' %}<span>{{ section.settings.note }}</span></p>
+        <p class="reveal__hint" aria-hidden="true"><span></span>{{ section.settings.hint }}</p>
+      </div>
+
+      <figure class="reveal__media" data-hero-media data-reveal-media style="--r: 0">
+        <img class="reveal__img" src="{{ section.settings.image_day | append: '-1200.webp' | asset_url }}" srcset="{{ section.settings.image_day | append: '-700.webp' | asset_url }} 700w, {{ section.settings.image_day | append: '-1200.webp' | asset_url }} 1136w" sizes="(max-width: 860px) 92vw, 44vw" width="1136" height="1408" alt="{{ section.settings.alt_day | escape }}" fetchpriority="high">
+        <div class="reveal__top" aria-hidden="true">
+          <img class="reveal__img" src="{{ section.settings.image_night | append: '-1200.webp' | asset_url }}" srcset="{{ section.settings.image_night | append: '-700.webp' | asset_url }} 700w, {{ section.settings.image_night | append: '-1200.webp' | asset_url }} 1136w" sizes="(max-width: 860px) 92vw, 44vw" width="1136" height="1408" alt="">
+        </div>
+        <span class="reveal__line" aria-hidden="true"><span class="reveal__knob">{% render 'icon', name: 'arrow' %}</span></span>
+        <figcaption class="reveal__caps">
+          <span class="reveal__cap reveal__cap--day"><b>{{ section.settings.day_label }}</b>{{ section.settings.day_text }}</span>
+          <span class="reveal__cap reveal__cap--night"><b>{{ section.settings.night_label }}</b>{{ section.settings.night_text }}</span>
+        </figcaption>
+        <button class="reveal__toggle" type="button" data-reveal-toggle aria-pressed="false">{{ section.settings.night_label }}</button>
+      </figure>
+    </div>
+  </div>
+</section>
+{% schema %}
+{
+  "name": "Reveal hero",
+  "settings": [
+    { "type": "text", "id": "line1", "label": "Headline line 1", "default": "Your overnight" },
+    { "type": "text", "id": "line2", "label": "Headline line 2", "default": "line ritual." },
+    { "type": "textarea", "id": "text", "label": "Text", "default": "A soft V-line strap you wear while you sleep, and a light posture belt for your days." },
+    { "type": "text", "id": "button_label", "label": "Button", "default": "Buy now" },
+    { "type": "text", "id": "button_link", "label": "Button link", "default": "/pages/seon-set" },
+    { "type": "text", "id": "price_label", "label": "Price note", "default": "The Seon Set" },
+    { "type": "text", "id": "note", "label": "Note", "default": "Free tracked US shipping. 30-day returns." },
+    { "type": "text", "id": "image_day", "label": "First photo (asset base name)", "default": "belt-lifestyle" },
+    { "type": "text", "id": "alt_day", "label": "First photo alt", "default": "A woman wearing the white posture belt over a cream top" },
+    { "type": "text", "id": "image_night", "label": "Revealed photo (asset base name)", "default": "set-lifestyle" },
+    { "type": "text", "id": "day_label", "label": "First label", "default": "By day" },
+    { "type": "text", "id": "day_text", "label": "First caption", "default": "The belt keeps your shoulders back." },
+    { "type": "text", "id": "night_label", "label": "Second label", "default": "By night" },
+    { "type": "text", "id": "night_text", "label": "Second caption", "default": "The strap goes on while you sleep." },
+    { "type": "text", "id": "hint", "label": "Scroll hint", "default": "Scroll to reveal" }
+  ],
+  "presets": [{ "name": "Reveal hero" }]
+}
+{% endschema %}

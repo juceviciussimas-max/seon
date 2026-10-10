@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#fffbf7">
   {%- assign brand = settings.brand_name | default: 'Seon' -%}
   {%- assign meta_desc = page_description | default: settings.brand_description -%}
-  <title>{% if template.name == 'index' %}{{ brand }} | Ten quiet minutes for your line{% else %}{{ page_title }}{% unless page_title contains brand %} | {{ brand }}{% endunless %}{% endif %}</title>
+  <title>{% if template.name == 'index' %}{{ brand }} | Your overnight line ritual{% else %}{{ page_title }}{% unless page_title contains brand %} | {{ brand }}{% endunless %}{% endif %}</title>
   {%- if meta_desc != blank -%}<meta name="description" content="{{ meta_desc | strip_html | escape }}">{%- endif -%}
   <link rel="canonical" href="{{ canonical_url }}">
   <meta property="og:site_name" content="{{ brand | escape }}">

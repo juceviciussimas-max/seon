@@ -18,6 +18,7 @@
     delivery: { min: {{ settings.delivery_min | default: 7 }}, max: {{ settings.delivery_max | default: 12 }} },
     atc: {{ settings.atc_behavior | default: 'drawer' | json }},
     lowStock: {{ settings.low_stock_threshold | default: 15 }},
+    bundleImages: { set: {{ 'set-flat-700.webp' | asset_url | json }}, box: {{ 'box-flat-700.webp' | asset_url | json }} },
     protection: {% if settings.protection_enabled and protection.id and protection.available %}{ handle: {{ protection.handle | json }}, variant: {{ protection.selected_or_first_available_variant.id }}, price: {{ protection.price }} }{% else %}null{% endif %},
     products: {
       strap: {% if strap.id %}{

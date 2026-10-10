@@ -54,6 +54,7 @@
     return api(cartUrl('/cart/add.js'), { items: items });
   }
   function changeLine(key, qty) { return api(cartUrl('/cart/change.js'), { id: key, quantity: qty }); }
+  function updateCart(updates) { return api(cartUrl('/cart/update.js'), { updates: updates }); }
 
   /* ---------- header count ---------- */
   var countEl = $('[data-cart-count]');
@@ -82,11 +83,11 @@
     var sq = countOf(cart, strap.handle), bq = countOf(cart, belt.handle);
     var sp = strap.variants[0].price, bp = belt.variants[0].price;
     if (bq >= 1 && sq < 2) {
-      return '<div class="upsell"><p class="upsell__title">' + (sq === 0 ? 'Complete your set' : 'Make it the Ritual Box') + '</p>' +
+      return '<div class="upsell' + (sq ? ' upsell--optional' : '') + '"><p class="upsell__title">' + (sq === 0 ? 'Complete your set' : 'Optional upgrade: the Ritual Box') + '</p>' +
         '<div class="upsell__row"><img src="' + esc(strap.image) + '" alt="" width="56" height="56">' +
-        '<div><div class="upsell__name">' + (sq === 0 ? esc(strap.title) : 'A second ' + esc(strap.title)) + '</div>' +
-        '<div class="upsell__price">' + money(sp - D) + ' with your belt<s>' + money(sp) + '</s></div></div>' +
-        '<button class="btn btn--primary upsell__add" type="button" data-upsell-add="' + firstAvailable(strap) + '">Add</button></div></div>';
+        '<div><div class="upsell__name">' + (sq === 0 ? esc(strap.title) : 'Add a second strap') + '</div>' +
+        '<div class="upsell__price">' + (sq ? money(sp - D) + ', you save ' + money(D) + ' more' : money(sp - D) + ' with your belt') + '<s>' + money(sp) + '</s></div></div>' +
+        '<button class="btn btn--primary upsell__add" type="button" data-upsell-add="' + firstAvailable(strap) + '">' + (sq ? 'Upgrade' : 'Add') + '</button></div></div>';
     }
     if (sq >= 1 && bq === 0) {
       var sizes = belt.variants.map(function (v, i) {
@@ -102,12 +103,19 @@
     return '';
   }
 
-  function lineHTML(item) {
+  function variantLabel(item) {
     var opts = (item.options_with_values || []).filter(function (o) { return o.value && o.value !== 'Default Title'; });
-    var variant = opts.map(function (o) { return o.name === 'Title' ? o.value : o.name + ' ' + o.value; }).join(', ');
+    return opts.map(function (o) { return o.name === 'Title' ? o.value : o.name + ' ' + o.value; }).join(', ');
+  }
+  // qty/base: when a set is in the cart, the set's units are shown in one bundle row and
+  // only the extra units of that line show here (base = units already in the bundle).
+  function lineHTML(item, qty, base) {
+    base = base || 0;
+    if (base) { qty = item.quantity - base; item = Object.assign({}, item, { quantity: qty, original_line_price: item.price * qty, final_line_price: item.price * qty }); }
+    var variant = variantLabel(item);
     var img = item.image ? item.image.replace(/(\.[a-z]+)(\?|$)/i, '$1$2') : '';
     var discounted = item.final_line_price < item.original_line_price;
-    return '<li class="cart-line" data-key="' + esc(item.key) + '">' +
+    return '<li class="cart-line" data-key="' + esc(item.key) + '" data-base="' + base + '">' +
       '<a class="cart-line__img" href="' + esc(item.url) + '">' + (img ? '<img src="' + esc(img) + (img.indexOf('?') > -1 ? '&' : '?') + 'width=200" alt="" width="78" height="100">' : '') + '</a>' +
       '<div class="cart-line__main">' +
         '<div class="cart-line__top"><div><div class="cart-line__name">' + esc(item.product_title) + '</div>' + (variant ? '<div class="cart-line__variant">' + esc(variant) + '</div>' : '') + '</div>' +
@@ -117,6 +125,33 @@
           '<output class="qty__val">' + item.quantity + '</output>' +
           '<button class="qty__btn" type="button" data-qty="1" aria-label="Increase quantity"' + (item.quantity >= 10 ? ' disabled' : '') + '>+</button></div>' +
           '<button class="link-btn" type="button" data-remove>Remove</button></div>' +
+      '</div></li>';
+  }
+
+  function groupLines(cart) {
+    var goods = cart.items.filter(function (i) { return !isProtection(i); });
+    var sLine = strap && goods.find(function (i) { return i.handle === strap.handle; });
+    var bLine = belt && goods.find(function (i) { return i.handle === belt.handle; });
+    if (!sLine || !bLine || !D) return { bundle: null, rest: goods.map(function (i) { return { item: i, base: 0 }; }) };
+    var bs = Math.min(sLine.quantity, 2);
+    var rest = [];
+    goods.forEach(function (i) {
+      var base = i === sLine ? bs : i === bLine ? 1 : 0;
+      if (i.quantity - base > 0) rest.push({ item: i, base: base });
+    });
+    return { bundle: { straps: bs, strapLine: sLine, beltLine: bLine, kind: bs >= 2 ? 'box' : 'set', math: bundle(bs, 1) }, rest: rest };
+  }
+  function bundleHTML(b) {
+    var name = b.kind === 'box' ? 'The Ritual Box' : 'The Seon Set';
+    var img = S.bundleImages && S.bundleImages[b.kind];
+    return '<li class="cart-line cart-bundle" data-bundle-line>' +
+      '<span class="cart-line__img">' + (img ? '<img src="' + esc(img) + '" alt="" width="78" height="100">' : '') + '</span>' +
+      '<div class="cart-line__main">' +
+        '<div class="cart-line__top"><div><div class="cart-line__name">' + name + '</div>' +
+        '<div class="cart-line__variant">' + b.straps + ' &times; ' + esc(strap.title) + '<br>1 &times; ' + esc(belt.title) + (variantLabel(b.beltLine) ? ', ' + esc(variantLabel(b.beltLine)) : '') + '</div></div>' +
+        '<div class="cart-line__price"><s class="cart-line__was">' + money(b.math.full) + '</s> ' + money(b.math.now) + '</div></div>' +
+        '<div class="cart-line__bottom"><span class="cart-bundle__save">You save ' + money(b.math.save) + '</span>' +
+        '<button class="link-btn" type="button" data-remove-bundle>Remove</button></div>' +
       '</div></li>';
   }
 
@@ -169,7 +204,8 @@
     if (extra) extra.hidden = !goodsCount;
     if (!target) return;
     if (!goodsCount) { target.innerHTML = emptyHTML(); if (footTarget) footTarget.innerHTML = ''; return; }
-    target.innerHTML = trackerHTML(cart) + '<ul>' + goods.map(lineHTML).join('') + '</ul>' + upsellHTML(cart) + protectRowHTML(cart);
+    var g = groupLines(cart);
+    target.innerHTML = trackerHTML(cart) + '<ul>' + (g.bundle ? bundleHTML(g.bundle) : '') + g.rest.map(function (r) { return lineHTML(r.item, r.item.quantity, r.base); }).join('') + '</ul>' + upsellHTML(cart) + protectRowHTML(cart);
     var savings = cart.original_total_price - cart.total_price;
     var pl = protectionLine(cart);
     var html = '<dl class="totals">' +
@@ -232,15 +268,28 @@
     body.prepend(p); setTimeout(function () { p.remove(); }, 5000);
   }
 
+  // A set (strap + belt) replaces whatever straps and belts are in the cart, so pressing
+  // "Add the Seon Set" always leaves exactly that set, never two of each.
+  function isBundle(items) {
+    if (!strap || !belt) return false;
+    var has = function (p, id) { return p.variants.some(function (v) { return v.id === +id; }); };
+    return items.some(function (i) { return i.quantity > 0 && has(strap, i.id); }) && items.some(function (i) { return i.quantity > 0 && has(belt, i.id); });
+  }
+
   // Adds the items, plus shipping protection when its switch near the button is on.
   function addAndOpen(items, btn) {
     var scope = btn && btn.closest('[data-pdp], [data-bundle], [data-card]');
     var sw = scope && $('[data-protect-input]', scope);
     var wantProtection = !!(P && sw && sw.checked);
-    var pre = wantProtection ? getCart() : Promise.resolve(null);
+    var isSet = isBundle(items);
+    var pre = (wantProtection || isSet) ? getCart() : Promise.resolve(null);
     return withLoading(btn, pre.then(function (c) {
       if (wantProtection && !(c && protectionLine(c))) items = items.concat([{ id: P.variant, quantity: 1 }]);
-      return addItems(items);
+      if (!isSet || !c) return addItems(items);
+      // Clear straps and belts already in the cart, then add the set fresh.
+      var zero = {};
+      c.items.forEach(function (i) { if (i.handle === strap.handle || i.handle === belt.handle) zero[i.key] = 0; });
+      return (Object.keys(zero).length ? updateCart(zero) : Promise.resolve()).then(function () { return addItems(items); });
     }).then(function () {
       if (btn) { var l = $('.btn__label', btn) || btn; var old = l.textContent; btn.classList.add('is-done'); l.textContent = 'Added'; setTimeout(function () { btn.classList.remove('is-done'); l.textContent = old; }, 1400); }
       announce('Added to cart');
@@ -265,12 +314,24 @@
     if (t.closest('[data-cart-close]')) { closeDrawer(); return; }
 
     var line = t.closest('.cart-line');
+    var rerender = function (c) { render(c, body, foot); var pg = $('[data-cart-page]'); if (pg) render(c, pg, null); return c; };
+    if (line && current && t.closest('[data-remove-bundle]')) {
+      var gb = groupLines(current).bundle;
+      if (gb) {
+        var u = {};
+        u[gb.strapLine.key] = gb.strapLine.quantity - gb.straps;
+        u[gb.beltLine.key] = gb.beltLine.quantity - 1;
+        withLoading(line, updateCart(u).then(tidy).then(rerender).then(function () { announce('Set removed from cart'); }));
+      }
+      return;
+    }
     if (line && current) {
       var key = line.getAttribute('data-key');
+      var base = +line.getAttribute('data-base') || 0;
       var item = current.items.find(function (i) { return i.key === key; });
       var q = t.closest('[data-qty]');
-      if (q && item) { withLoading(line, changeLine(key, Math.min(10, Math.max(0, item.quantity + (+q.getAttribute('data-qty'))))).then(tidy).then(function (c) { render(c, body, foot); var pg = $('[data-cart-page]'); if (pg) render(c, pg, null); })); return; }
-      if (t.closest('[data-remove]')) { withLoading(line, changeLine(key, 0).then(tidy).then(function (c) { render(c, body, foot); var pg = $('[data-cart-page]'); if (pg) render(c, pg, null); announce('Removed from cart'); })); return; }
+      if (q && item) { withLoading(line, changeLine(key, Math.min(10, Math.max(base, item.quantity + (+q.getAttribute('data-qty'))))).then(tidy).then(rerender)); return; }
+      if (t.closest('[data-remove]')) { withLoading(line, changeLine(key, base).then(tidy).then(rerender).then(function () { announce('Removed from cart'); })); return; }
     }
 
     var size = t.closest('[data-upsell-size]');
@@ -592,6 +653,25 @@
     solid();
   }
 
+  // Reveal hero: --r goes 0 (day photo) -> 1 (night photo).
+  var rv = $('[data-reveal-hero]');
+  var rvMedia = rv && $('[data-reveal-media]', rv);
+  function setReveal(r) {
+    if (!rvMedia) return;
+    rvMedia.style.setProperty('--r', r.toFixed(4));
+    rv.classList.toggle('is-moving', r > 0.03);
+  }
+  if (rv) {
+    var tg = $('[data-reveal-toggle]', rv), dayTxt = tg ? tg.textContent : '';
+    var dayLabel = $('.reveal__cap--day b', rv), nightLabel = $('.reveal__cap--night b', rv);
+    if (tg) tg.addEventListener('click', function () {
+      var on = tg.getAttribute('aria-pressed') !== 'true';
+      tg.setAttribute('aria-pressed', on ? 'true' : 'false');
+      tg.textContent = on ? (dayLabel ? dayLabel.textContent : 'Day') : (nightLabel ? nightLabel.textContent : dayTxt);
+      setReveal(on ? 1 : 0);
+    });
+  }
+
   var hasGsap = !!(window.gsap && window.ScrollTrigger) && !reduceMotion;
   if (!hasGsap) {
     root.classList.add('no-motion');
@@ -614,12 +694,20 @@
   var reveals = $$('[data-reveal]');
   if (reveals.length) {
     gsap.set(reveals, { autoAlpha: 0, y: 26 });
-    ScrollTrigger.batch(reveals, {
-      start: 'top 90%', once: true,
-      onEnter: function (els) { gsap.to(els, { autoAlpha: 1, y: 0, duration: 0.9, ease: 'power3.out', stagger: 0.08, overwrite: true, clearProps: 'transform,opacity,visibility' }); }
-    });
+    var show = function (els) { gsap.to(els, { autoAlpha: 1, y: 0, duration: 0.9, ease: 'power3.out', stagger: 0.08, overwrite: true, clearProps: 'transform,opacity,visibility' }); };
+    // onLeave/onEnterBack too, so nothing stays hidden if the page opens already scrolled past it.
+    ScrollTrigger.batch(reveals, { start: 'top 90%', once: true, onEnter: show, onLeave: show, onEnterBack: show });
   }
-  if ($('[data-hero-media] img')) {
+  if (rv && rvMedia) {
+    // Pin the opening screen under the header and wipe from the day photo to the night photo.
+    var rvImgs = $$('.reveal__img', rvMedia);
+    var push = gsap.to(rvImgs, { scale: 1.06, ease: 'none', paused: true });
+    ScrollTrigger.create({
+      trigger: rv, pin: $('[data-reveal-stage]', rv), anticipatePin: 1,
+      start: function () { return 'top ' + (header ? header.offsetHeight : 0); }, end: '+=110%',
+      onUpdate: function (self) { setReveal(self.progress); push.progress(self.progress); }
+    });
+  } else if ($('[data-hero-media] img')) {
     gsap.to('[data-hero-media] img', { scale: 1.08, yPercent: 6, ease: 'none', scrollTrigger: { trigger: '[data-hero]', start: 'top top', end: 'bottom top', scrub: true } });
   }
   $$('[data-ritual]').forEach(function (r) {
