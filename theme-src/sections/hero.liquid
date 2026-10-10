@@ -6,10 +6,18 @@
         <span class="line"><span>{{ section.settings.line2 }}</span></span>
       </h1>
       <p class="s-hero__lead">{{ section.settings.text }}</p>
+      {%- assign strap = all_products[settings.strap_handle] -%}
+      {%- assign belt = all_products[settings.belt_handle] -%}
       <div class="s-hero__cta">
-        <a class="btn btn--primary" href="{{ section.settings.button_link | default: '#shop' }}" data-scroll-to>{{ section.settings.button_label }}</a>
-        <span class="s-hero__note">{{ section.settings.note }}</span>
+        <a class="btn btn--accent btn--shine" href="{{ section.settings.button_link | default: '#shop' }}" data-scroll-to>{{ section.settings.button_label }}{% render 'icon', name: 'arrow' %}</a>
+        {%- if strap.id and belt.id -%}
+          {%- assign full = strap.price | plus: belt.price -%}
+          {%- assign now = settings.bundle_discount | default: '9.99' | times: 100 | round -%}
+          {%- assign now = full | minus: now -%}
+          <span class="s-hero__price"><strong>{{ now | money }}</strong> <s>{{ full | money }}</s><small>{{ section.settings.price_label }}</small></span>
+        {%- endif -%}
       </div>
+      <p class="s-hero__note">{% render 'icon', name: 'truck' %}<span>{{ section.settings.note }}</span>{% if section.settings.alt_label != blank %}<a class="text-link" href="{{ section.settings.alt_link }}" data-scroll-to>{{ section.settings.alt_label }}</a>{% endif %}</p>
     </div>
     <figure class="s-hero__media" data-hero-media>
       {%- if section.settings.image -%}
@@ -27,9 +35,12 @@
     { "type": "text", "id": "line1", "label": "Headline line 1", "default": "Ten quiet minutes" },
     { "type": "text", "id": "line2", "label": "Headline line 2", "default": "for your line." },
     { "type": "textarea", "id": "text", "label": "Text", "default": "A soft V-line strap and a light posture belt, for the evenings you look after yourself." },
-    { "type": "text", "id": "button_label", "label": "Button", "default": "Shop the ritual" },
-    { "type": "text", "id": "button_link", "label": "Button link", "default": "#shop" },
-    { "type": "text", "id": "note", "label": "Note next to button", "default": "Free US shipping" },
+    { "type": "text", "id": "button_label", "label": "Button", "default": "Buy now" },
+    { "type": "text", "id": "button_link", "label": "Button link", "default": "/pages/seon-set" },
+    { "type": "text", "id": "price_label", "label": "Price note", "default": "The Seon Set" },
+    { "type": "text", "id": "note", "label": "Note under the button", "default": "Free tracked US shipping. 30-day returns." },
+    { "type": "text", "id": "alt_label", "label": "Second link", "default": "Shop all" },
+    { "type": "text", "id": "alt_link", "label": "Second link URL", "default": "#shop" },
     { "type": "image_picker", "id": "image", "label": "Image (optional, replaces the default)" }
   ],
   "presets": [{ "name": "Hero" }]

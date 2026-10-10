@@ -108,6 +108,13 @@
         "id": "protection_default",
         "label": "Shipping protection switched on by default",
         "default": false
+      },
+      {
+        "type": "number",
+        "id": "low_stock_threshold",
+        "label": "Show 'Only N left' when real stock is at or below",
+        "default": 15,
+        "info": "Only shows for products whose inventory Shopify tracks, using the real count."
       }
     ]
   },

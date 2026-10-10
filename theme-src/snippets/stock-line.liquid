@@ -1,7 +1,7 @@
-<p class="stock">
-  <span class="stock__dot{% unless available %} stock__dot--out{% endunless %}" aria-hidden="true"></span>
+<p class="stock" data-stock>
+  <span class="stock__dot{% unless available %} stock__dot--out{% endunless %}" aria-hidden="true" data-stock-dot></span>
   {%- if available -%}
-    <span><strong>In stock.</strong> Order today, arrives <strong data-eta>in {{ settings.delivery_text }}</strong>, free.</span>
+    <span><strong data-stock-label>In stock.</strong> Order today, arrives <strong data-eta>in {{ settings.delivery_text }}</strong>, free.</span>
   {%- else -%}
     <span><strong>Sold out</strong> for now.</span>
   {%- endif -%}

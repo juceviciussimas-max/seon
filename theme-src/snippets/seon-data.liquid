@@ -17,17 +17,18 @@
     bundleDiscount: {{ settings.bundle_discount | default: '9.99' | times: 100 | round }},
     delivery: { min: {{ settings.delivery_min | default: 7 }}, max: {{ settings.delivery_max | default: 12 }} },
     atc: {{ settings.atc_behavior | default: 'drawer' | json }},
+    lowStock: {{ settings.low_stock_threshold | default: 15 }},
     protection: {% if settings.protection_enabled and protection.id and protection.available %}{ handle: {{ protection.handle | json }}, variant: {{ protection.selected_or_first_available_variant.id }}, price: {{ protection.price }} }{% else %}null{% endif %},
     products: {
       strap: {% if strap.id %}{
         id: {{ strap.id }}, handle: {{ strap.handle | json }}, title: {{ strap.title | json }}, url: {{ strap.url | json }},
         image: {{ strap.featured_image | image_url: width: 240 | json }},
-        variants: [{% for v in strap.variants %}{ id: {{ v.id }}, title: {{ v.title | json }}, price: {{ v.price }}, available: {{ v.available }} }{% unless forloop.last %},{% endunless %}{% endfor %}]
+        variants: [{% for v in strap.variants %}{ id: {{ v.id }}, title: {{ v.title | json }}, price: {{ v.price }}, available: {{ v.available }}, inv: {% if v.inventory_management == 'shopify' %}{{ v.inventory_quantity }}{% else %}null{% endif %} }{% unless forloop.last %},{% endunless %}{% endfor %}]
       }{% else %}null{% endif %},
       belt: {% if belt.id %}{
         id: {{ belt.id }}, handle: {{ belt.handle | json }}, title: {{ belt.title | json }}, url: {{ belt.url | json }},
         image: {{ belt.featured_image | image_url: width: 240 | json }},
-        variants: [{% for v in belt.variants %}{ id: {{ v.id }}, title: {{ v.title | json }}, price: {{ v.price }}, available: {{ v.available }} }{% unless forloop.last %},{% endunless %}{% endfor %}]
+        variants: [{% for v in belt.variants %}{ id: {{ v.id }}, title: {{ v.title | json }}, price: {{ v.price }}, available: {{ v.available }}, inv: {% if v.inventory_management == 'shopify' %}{{ v.inventory_quantity }}{% else %}null{% endif %} }{% unless forloop.last %},{% endunless %}{% endfor %}]
       }{% else %}null{% endif %}
     }
   };

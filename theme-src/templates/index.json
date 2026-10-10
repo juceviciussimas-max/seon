@@ -2,7 +2,14 @@
   "sections": {
     "hero": {
       "type": "hero",
-      "settings": {}
+      "settings": {
+        "button_label": "Buy now",
+        "button_link": "/pages/seon-set",
+        "price_label": "The Seon Set",
+        "note": "Free tracked US shipping. 30-day returns.",
+        "alt_label": "Shop all",
+        "alt_link": "#shop"
+      }
     },
     "ritual": {
       "type": "ritual",
@@ -148,6 +155,10 @@
     "closer": {
       "type": "closer",
       "settings": {}
+    },
+    "buybar": {
+      "type": "home-buybar",
+      "settings": {}
     }
   },
   "order": [
@@ -156,6 +167,7 @@
     "showcase",
     "posture",
     "faq",
-    "closer"
+    "closer",
+    "buybar"
   ]
 }

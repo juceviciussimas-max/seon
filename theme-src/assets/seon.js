@@ -334,6 +334,47 @@
     }
   });
 
+  /* ---------- low stock: only shown when Shopify tracks the real count ---------- */
+  function variantInfo(id) {
+    var out = null;
+    [strap, belt].forEach(function (p) { if (p) p.variants.forEach(function (v) { if (v.id === +id) out = { v: v, p: p }; }); });
+    return out;
+  }
+  function updateStock(items, scope) {
+    var box = $('[data-stock]', scope);
+    var label = box && $('[data-stock-label]', box), dot = box && $('[data-stock-dot]', box);
+    if (!label) return;
+    var low = null;
+    items.forEach(function (it) {
+      var f = variantInfo(it.id);
+      if (!f || f.v.inv == null || f.v.inv <= 0) return;
+      if (f.v.inv <= (S.lowStock || 0) && (!low || f.v.inv < low.n)) low = { n: f.v.inv, p: f.p, v: f.v };
+    });
+    if (low) {
+      label.textContent = 'Only ' + low.n + ' left' + (low.p === belt && belt.variants.length > 1 ? ' in size ' + low.v.title : '') + '.';
+      dot.classList.add('stock__dot--low');
+    } else { label.textContent = 'In stock.'; dot.classList.remove('stock__dot--low'); }
+  }
+  $$('[data-bundle]').forEach(function (b) {
+    var sync = function () {
+      var sq = +b.getAttribute('data-strap-qty'), bq = +b.getAttribute('data-belt-qty');
+      var bsel = $('input[type=radio]:checked', b), items = [];
+      if (sq && strap) items.push({ id: firstAvailable(strap), quantity: sq });
+      if (bq && bsel) items.push({ id: +bsel.value, quantity: bq });
+      updateStock(items, b);
+    };
+    b.addEventListener('change', sync); sync();
+  });
+
+  /* ---------- floating buy bar on the home page ---------- */
+  var homeBar = $('[data-home-bar]'), heroEl = $('[data-hero]');
+  if (homeBar && heroEl && 'IntersectionObserver' in window) {
+    homeBar.hidden = false;
+    new IntersectionObserver(function (en) {
+      homeBar.classList.toggle('is-in', !en[0].isIntersecting && en[0].boundingClientRect.top < 0);
+    }).observe(heroEl);
+  }
+
   /* ---------- announcement rotator ---------- */
   var ann = $$('.announce__item');
   if (ann.length > 1 && !reduceMotion) {
@@ -492,6 +533,7 @@
 
     function syncPdp() {
       var s = selection();
+      updateStock(s.items, pdp);
       if (sizeGroup) sizeGroup.hidden = !(s.bq > 0);
       if (s.b) {
         priceEl.textContent = money(s.b.now);

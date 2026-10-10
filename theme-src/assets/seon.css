@@ -765,3 +765,35 @@ p { max-width: 62ch; text-wrap: pretty; }
   .pdp__thumbs li { flex: none; }
   .pdp__thumbs .thumb { width: 64px; }
 }
+
+/* Buy now accent */
+.btn--accent { position: relative; overflow: hidden; background: var(--rose); color: var(--paper); box-shadow: 0 12px 26px -14px rgba(169, 86, 106, 0.95); }
+.btn--accent .icon { font-size: 1.05rem; transition: transform 200ms var(--ease-out); }
+@media (hover: hover) and (pointer: fine) { .btn--accent:hover { background: #95475a; } .btn--accent:hover .icon { transform: translateX(3px); } }
+@media (prefers-reduced-motion: no-preference) {
+  .btn--shine::after { content: ""; position: absolute; top: 0; bottom: 0; left: -60%; width: 38%; background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.32), transparent); transform: skewX(-20deg); animation: shine 5s ease-in-out 1.4s infinite; pointer-events: none; }
+}
+@keyframes shine { 0% { left: -60%; } 20%, 100% { left: 135%; } }
+.s-hero__cta { align-items: center; }
+.s-hero__price { display: grid; line-height: 1.2; font-variant-numeric: tabular-nums; }
+.s-hero__price strong { font-family: var(--font-display); font-weight: 500; font-size: 1.5rem; }
+.s-hero__price s { color: var(--muted); font-size: 0.875rem; margin-left: 6px; }
+.s-hero__price small { color: var(--ink-2); font-size: 0.8125rem; }
+.s-hero__price strong + s { display: inline; }
+.s-hero__note { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; color: var(--ink-2); font-size: 0.9375rem; max-width: none; }
+.s-hero__note .icon { color: var(--rose); font-size: 1.15rem; }
+.s-hero__note span { margin-right: 4px; }
+
+/* Floating buy bar (home) */
+.buybar--home { display: flex; gap: 12px; }
+.buybar__img { flex: none; width: 48px; height: 48px; border-radius: 12px; object-fit: cover; object-position: 50% 25%; }
+.buybar--home .buybar__info { flex: 1; }
+.buybar--home .buybar__info s { font-family: var(--font-body); font-size: 0.8125rem; color: var(--muted); font-weight: 400; margin-left: 4px; }
+@media (min-width: 901px) {
+  .buybar--home { left: auto; right: 24px; bottom: 24px; width: auto; max-width: 440px; padding: 10px 10px 10px 12px; border: 1px solid var(--line); border-radius: 22px; box-shadow: var(--shadow); transform: translateY(140%); }
+  .buybar--home.is-in { transform: none; }
+}
+
+/* Real low stock */
+.stock__dot--low { background: #c47a2c; }
+.stock__dot--low::after { background: rgba(196, 122, 44, 0.3); }

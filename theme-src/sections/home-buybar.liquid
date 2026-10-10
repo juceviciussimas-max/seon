@@ -1,0 +1,23 @@
+{%- assign strap = all_products[settings.strap_handle] -%}
+{%- assign belt = all_products[settings.belt_handle] -%}
+{%- if strap.id and belt.id -%}
+  {%- assign full = strap.price | plus: belt.price -%}
+  {%- assign disc = settings.bundle_discount | default: '9.99' | times: 100 | round -%}
+  {%- assign now = full | minus: disc -%}
+  <div class="buybar buybar--home" data-home-bar hidden>
+    <img class="buybar__img" src="{{ 'set-lifestyle-700.webp' | asset_url }}" alt="" width="48" height="48" loading="lazy">
+    <div class="buybar__info"><strong>{{ now | money }} <s>{{ full | money }}</s></strong><span>{{ section.settings.label }}</span></div>
+    <a class="btn btn--accent btn--shine" href="{{ section.settings.link }}">{{ section.settings.button }}</a>
+  </div>
+{%- endif -%}
+{% schema %}
+{
+  "name": "Floating buy bar",
+  "settings": [
+    { "type": "text", "id": "label", "label": "Label", "default": "The Seon Set, free US shipping" },
+    { "type": "text", "id": "button", "label": "Button", "default": "Buy now" },
+    { "type": "text", "id": "link", "label": "Link", "default": "/pages/seon-set" }
+  ],
+  "presets": [{ "name": "Floating buy bar" }]
+}
+{% endschema %}
