@@ -50,7 +50,7 @@
           "settings": {
             "title": "Cup your chin",
             "text": "Place the wide mesh part under your chin and jawline.",
-            "fallback": "strap-1.webp"
+            "fallback": "strap-step1-1200.webp"
           }
         },
         "s2": {
@@ -58,7 +58,7 @@
           "settings": {
             "title": "Ears through",
             "text": "Slip each ear through the side openings so it sits flat.",
-            "fallback": "strap-2.webp"
+            "fallback": "strap-step2-1200.webp"
           }
         },
         "s3": {
@@ -66,7 +66,7 @@
           "settings": {
             "title": "Close and rest",
             "text": "Fasten the velcro on top, snug but comfortable. Wear it for 20 to 30 minutes while you read or do your skincare.",
-            "fallback": "hero-model-700.webp"
+            "fallback": "hero-model-1200.webp"
           }
         }
       },

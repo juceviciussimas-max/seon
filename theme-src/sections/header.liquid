@@ -4,7 +4,7 @@
 <header class="site-header" data-header>
   <div class="container site-header__row">
     <button class="icon-btn menu-btn" type="button" data-menu-open aria-label="Open menu" aria-haspopup="dialog" aria-controls="site-menu">{% render 'icon', name: 'list' %}</button>
-    <a class="brand" href="{{ routes.root_url }}" aria-label="{{ shop.name }}, home">
+    <a class="brand" href="{{ routes.root_url }}" aria-label="{{ settings.brand_name | default: 'Seon' }}, home">
       <span class="brand__name">Seon</span><span class="brand__ko" lang="ko">선</span>
     </a>
     <nav class="nav" aria-label="Main">

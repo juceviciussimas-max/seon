@@ -7,7 +7,9 @@
     <nav aria-label="Shop">
       <h2>Shop</h2>
       <ul>
-        <li><a href="{{ routes.root_url }}#shop">All products</a></li>
+        <li><a href="{{ routes.all_products_collection_url }}">Shop all</a></li>
+        <li><a href="/pages/seon-set">The Seon Set</a></li>
+        <li><a href="/pages/ritual-box">The Ritual Box</a></li>
         {%- if all_products[settings.strap_handle].url -%}<li><a href="{{ all_products[settings.strap_handle].url }}">V-Line Lifting Strap</a></li>{%- endif -%}
         {%- if all_products[settings.belt_handle].url -%}<li><a href="{{ all_products[settings.belt_handle].url }}">Posture Belt</a></li>{%- endif -%}
       </ul>
@@ -15,6 +17,7 @@
     <nav aria-label="Help">
       <h2>Help</h2>
       <ul>
+        <li><a href="{{ routes.root_url }}#ritual">How to wear</a></li>
         <li><a href="{{ routes.root_url }}#faq">FAQ</a></li>
         {%- if shop.shipping_policy -%}<li><a href="{{ shop.shipping_policy.url }}">Shipping</a></li>{%- endif -%}
         {%- if shop.refund_policy -%}<li><a href="{{ shop.refund_policy.url }}">Returns</a></li>{%- endif -%}
@@ -30,7 +33,7 @@
     </nav>
   </div>
   <div class="container site-footer__legal">
-    <p>&copy; {{ 'now' | date: '%Y' }} {{ shop.name }}. Comfort and self-care accessories, not medical devices.</p>
+    <p>&copy; {{ 'now' | date: '%Y' }} {{ settings.brand_name | default: 'Seon' }}. Comfort and self-care accessories, not medical devices.</p>
   </div>
 </footer>
 {% schema %}

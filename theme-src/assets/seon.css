@@ -656,7 +656,7 @@ p { max-width: 62ch; text-wrap: pretty; }
 .pcard__link { position: absolute; inset: 0; display: block; }
 .pcard__flag { position: absolute; top: 16px; left: 16px; padding: 6px 14px; border-radius: var(--r-pill); background: var(--paper); color: var(--ink); font-size: 0.8125rem; font-weight: 500; box-shadow: 0 6px 18px -10px rgba(90, 50, 58, 0.45); }
 .pcard--offer .pcard__media { aspect-ratio: 4 / 5; }
-.pcard--offer.pcard--wide .pcard__media { aspect-ratio: auto; }
+@media (min-width: 861px) { .pcard--offer.pcard--wide .pcard__media { aspect-ratio: auto; } }
 .pcard--offer[data-offer="set"] .pcard__img { object-position: 50% 24%; }
 .pcard__media .pcard__thumbs { z-index: 1; }
 
@@ -759,3 +759,9 @@ p { max-width: 62ch; text-wrap: pretty; }
 .drawer__foot .totals__row--total { padding-top: 8px; }
 @media (max-height: 760px) { .drawer__ship { padding-block: 8px; } .drawer__head { padding-bottom: 10px; } }
 @media (min-width: 861px) { .pcard--offer:not(.pcard--wide) .pcard__media { aspect-ratio: 1; } }
+@media (max-width: 900px) {
+  .pdp__thumbs { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; padding-bottom: 4px; overscroll-behavior-x: contain; }
+  .pdp__thumbs::-webkit-scrollbar { display: none; }
+  .pdp__thumbs li { flex: none; }
+  .pdp__thumbs .thumb { width: 64px; }
+}

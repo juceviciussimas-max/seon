@@ -36,6 +36,18 @@
     "settings": [
       {
         "type": "text",
+        "id": "brand_name",
+        "label": "Brand name",
+        "default": "Seon"
+      },
+      {
+        "type": "textarea",
+        "id": "brand_description",
+        "label": "Brand description (search and social previews)",
+        "default": "Korean-inspired self-care: a soft V-line lifting strap and a light posture belt. Free tracked US shipping, 30-day returns."
+      },
+      {
+        "type": "text",
         "id": "delivery_text",
         "label": "Delivery time",
         "default": "7 to 12 business days"

@@ -1,0 +1,28 @@
+{%- comment -%} Search engine data. Only facts the store already shows: name, photos, price, stock. No ratings until real reviews exist. {%- endcomment -%}
+{%- assign brand = settings.brand_name | default: 'Seon' -%}
+{%- if template.name == 'product' and product -%}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Product",
+  "name": {{ product.title | json }},
+  "description": {{ product.description | split: '</p>' | first | strip_html | strip_newlines | strip | json }},
+  "image": [{% for image in product.images limit: 6 %}{{ image | image_url: width: 1200 | prepend: 'https:' | json }}{% unless forloop.last %},{% endunless %}{% endfor %}],
+  "brand": { "@type": "Brand", "name": {{ brand | json }} },
+  "url": {{ request.origin | append: product.url | json }},
+  "offers": [{% for v in product.variants %}{
+    "@type": "Offer",
+    "sku": {{ v.sku | json }},
+    "name": {{ v.title | json }},
+    "price": {{ v.price | divided_by: 100.0 | json }},
+    "priceCurrency": {{ cart.currency.iso_code | json }},
+    "availability": "https://schema.org/{% if v.available %}InStock{% else %}OutOfStock{% endif %}",
+    "url": {{ request.origin | append: v.url | json }}
+  }{% unless forloop.last %},{% endunless %}{% endfor %}]
+}
+</script>
+{%- elsif template.name == 'index' -%}
+<script type="application/ld+json">
+{ "@context": "https://schema.org", "@type": "Organization", "name": {{ brand | json }}, "url": {{ request.origin | json }} }
+</script>
+{%- endif -%}

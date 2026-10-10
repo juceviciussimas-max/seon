@@ -103,13 +103,14 @@
   }
 
   function lineHTML(item) {
-    var variant = item.variant_title && item.variant_title !== 'Default Title' ? item.variant_title : '';
+    var opts = (item.options_with_values || []).filter(function (o) { return o.value && o.value !== 'Default Title'; });
+    var variant = opts.map(function (o) { return o.name === 'Title' ? o.value : o.name + ' ' + o.value; }).join(', ');
     var img = item.image ? item.image.replace(/(\.[a-z]+)(\?|$)/i, '$1$2') : '';
     var discounted = item.final_line_price < item.original_line_price;
     return '<li class="cart-line" data-key="' + esc(item.key) + '">' +
       '<a class="cart-line__img" href="' + esc(item.url) + '">' + (img ? '<img src="' + esc(img) + (img.indexOf('?') > -1 ? '&' : '?') + 'width=200" alt="" width="78" height="100">' : '') + '</a>' +
       '<div class="cart-line__main">' +
-        '<div class="cart-line__top"><div><div class="cart-line__name">' + esc(item.product_title) + '</div>' + (variant ? '<div class="cart-line__variant">Size ' + esc(variant) + '</div>' : '') + '</div>' +
+        '<div class="cart-line__top"><div><div class="cart-line__name">' + esc(item.product_title) + '</div>' + (variant ? '<div class="cart-line__variant">' + esc(variant) + '</div>' : '') + '</div>' +
         '<div class="cart-line__price">' + (discounted ? '<s class="cart-line__was">' + money(item.original_line_price) + '</s> ' : '') + money(item.final_line_price) + '</div></div>' +
         '<div class="cart-line__bottom"><div class="qty qty--sm" role="group" aria-label="Quantity">' +
           '<button class="qty__btn" type="button" data-qty="-1" aria-label="Decrease quantity">&minus;</button>' +

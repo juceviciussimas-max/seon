@@ -4,7 +4,7 @@
       {%- if section.settings.image -%}
         {{ section.settings.image | image_url: width: 1000 | image_tag: loading: 'lazy', alt: section.settings.image.alt }}
       {%- else -%}
-        <img src="{{ 'belt-1.webp' | asset_url }}" width="700" height="775" alt="A woman wearing the white posture belt, seen from the side" loading="lazy">
+        <img src="{{ 'belt-lifestyle-1200.webp' | asset_url }}" srcset="{{ 'belt-lifestyle-700.webp' | asset_url }} 700w, {{ 'belt-lifestyle-1200.webp' | asset_url }} 1136w" sizes="(max-width: 860px) 92vw, 45vw" width="1136" height="1408" alt="A woman wearing the white posture belt over a cream top, seen from behind" loading="lazy">
       {%- endif -%}
     </figure>
     <div class="posture__copy">

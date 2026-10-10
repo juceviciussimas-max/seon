@@ -4,11 +4,15 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
   <meta name="theme-color" content="#fffbf7">
-  <title>{{ page_title }}{% unless page_title contains shop.name %} | {{ shop.name }}{% endunless %}</title>
-  {%- if page_description -%}<meta name="description" content="{{ page_description | escape }}">{%- endif -%}
+  {%- assign brand = settings.brand_name | default: 'Seon' -%}
+  {%- assign meta_desc = page_description | default: settings.brand_description -%}
+  <title>{% if template.name == 'index' %}{{ brand }} | Ten quiet minutes for your line{% else %}{{ page_title }}{% unless page_title contains brand %} | {{ brand }}{% endunless %}{% endif %}</title>
+  {%- if meta_desc != blank -%}<meta name="description" content="{{ meta_desc | strip_html | escape }}">{%- endif -%}
   <link rel="canonical" href="{{ canonical_url }}">
-  <meta property="og:site_name" content="{{ shop.name | escape }}">
+  <meta property="og:site_name" content="{{ brand | escape }}">
   <meta property="og:title" content="{{ page_title | escape }}">
+  {%- if meta_desc != blank -%}<meta property="og:description" content="{{ meta_desc | strip_html | escape }}">{%- endif -%}
+  <meta name="twitter:card" content="summary_large_image">
   <meta property="og:url" content="{{ canonical_url }}">
   {%- if product and product.featured_image -%}
     <meta property="og:type" content="product">
@@ -23,6 +27,7 @@
   {{ 'seon.css' | asset_url | stylesheet_tag }}
   <script>document.documentElement.classList.add('js');</script>
   {{ content_for_header }}
+  {% render 'structured-data' %}
 </head>
 <body class="template-{{ template.name }}{% if template.suffix %} template-{{ template.name }}-{{ template.suffix }}{% endif %}">
   <a class="skip" href="#main">Skip to content</a>

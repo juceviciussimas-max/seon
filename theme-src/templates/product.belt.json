@@ -78,7 +78,7 @@
           "settings": {
             "title": "Arms through the loops",
             "text": "Like putting on a backpack, with the pad at the back.",
-            "fallback": "belt-1.webp"
+            "fallback": "belt-step1-1200.webp"
           }
         },
         "s1": {
@@ -86,7 +86,7 @@
           "settings": {
             "title": "Pad between your shoulder blades",
             "text": "It sits flat and stays hidden under a top.",
-            "fallback": "belt-1.webp"
+            "fallback": "belt-lifestyle-1200.webp"
           }
         },
         "s2": {
